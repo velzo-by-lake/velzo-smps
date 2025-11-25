@@ -18,7 +18,8 @@ type BeltCanvasProps = {
 }
 
 const DEFAULT_WIDTH = 760
-const DEFAULT_HEIGHT = 220
+const DEFAULT_HEIGHT = 200
+const MAX_WIDTH = 1200 // 최대 너비 제한
 const padding = 32
 
 const clampX = (value: number, width: number, trackWidth: number) => {
@@ -169,8 +170,10 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
     if (!containerRef.current) return undefined
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0]
-      const width = entry.contentRect.width
-      const height = Math.max(200, Math.min(320, width * 0.25))
+      const containerWidth = entry.contentRect.width
+      // 최대 너비 제한
+      const width = Math.min(containerWidth, MAX_WIDTH)
+      const height = Math.max(180, Math.min(220, width * 0.18))
       setCanvasSize({ width, height })
     })
     observer.observe(containerRef.current)
@@ -271,13 +274,13 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
           </div>
         )}
         <Stage
-          width={trackWidth}
+          width={Math.min(trackWidth, MAX_WIDTH)}
           height={trackHeight}
           ref={stageRef}
           className="konva-stage"
           onMouseUp={handlePointerUp}
           onTouchEnd={handlePointerUp}
-          style={{ cursor: activeProduct ? 'copy' : 'default' }}
+          style={{ cursor: activeProduct ? 'copy' : 'default', maxWidth: '100%' }}
         >
           <Layer>
             <Rect

@@ -58,7 +58,7 @@ function PowerSummary({ belt }: PowerSummaryProps) {
     <div className="summary-card">
       <div className="summary-head">
         <div>
-          <p className="muted">SMPS {belt.id.slice(0, 4).toUpperCase()}</p>
+          <p className="muted">전력 사용량</p>
           <h3>{totalWatt}W</h3>
         </div>
         <span className={toneClass}>{statusLabel}</span>
@@ -77,7 +77,9 @@ function PowerSummary({ belt }: PowerSummaryProps) {
         </div>
         <span>{absolutePercent.toFixed(1)}%</span>
       </div>
-      <div className="lottie-box" ref={lottieContainer} />
+      {status === 'OVERLOAD' && (
+        <div className="lottie-box" ref={lottieContainer} />
+      )}
     </div>
   )
 }

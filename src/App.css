@@ -784,11 +784,30 @@ body {
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0;
-  padding: 16px;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .belt-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .belt-wrapper {
+    flex: 1;
+    min-width: 0;
+    max-width: 600px;
+  }
+
+  .belt-controls {
+    width: 320px;
+    flex-shrink: 0;
+  }
 }
 
 .belt-wrapper {
@@ -799,6 +818,7 @@ body {
   position: relative;
   overflow: hidden;
   width: 100%;
+  max-width: 100%;
 }
 
 .belt-explosion {
@@ -806,8 +826,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   max-width: 100%;
   max-height: 100%;
   pointer-events: none;
@@ -823,7 +843,9 @@ body {
 
 .belt-stage-container {
   width: 100%;
+  max-width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .belt-empty-hint {
@@ -842,6 +864,18 @@ body {
 
 .konva-stage {
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.konva-stage .konvajs-content {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.konva-stage canvas {
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 .belt-controls {
@@ -849,6 +883,93 @@ body {
   flex-direction: column;
   gap: 12px;
   width: 100%;
+}
+
+/* PowerSummary 스타일 */
+.summary-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.summary-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.summary-head h3 {
+  margin: 4px 0 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.summary-head .muted {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.progress-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.progress-block label {
+  min-width: 70px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+.progress {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress > div {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #45a049);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress.danger > div {
+  background: linear-gradient(90deg, #ff6b6b, #ff8787);
+}
+
+.progress-block span {
+  min-width: 50px;
+  text-align: right;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.lottie-box {
+  width: 100px;
+  height: 100px;
+  margin: 8px auto 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.lottie-box svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* ============================================
