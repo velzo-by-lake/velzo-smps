@@ -938,6 +938,7 @@ body {
   font-weight: 600;
 }
 
+/* 모바일: 스와이프 갤러리 */
 .modal-gallery-swipe {
   position: relative;
   width: 100%;
@@ -946,6 +947,61 @@ body {
   background: rgba(255, 255, 255, 0.05);
   touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
+  display: block;
+}
+
+/* PC: 그리드 갤러리 (기본 숨김) */
+.modal-gallery-grid {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 0;
+}
+
+.gallery-grid-item {
+  position: relative;
+  border: none;
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  aspect-ratio: 4 / 3;
+}
+
+.gallery-grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-grid-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-grid-item:hover .gallery-grid-overlay {
+  opacity: 1;
+}
+
+.gallery-grid-overlay span {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .gallery-swipe-container {
@@ -1302,6 +1358,19 @@ body {
 
   .gallery-item img {
     height: 180px;
+  }
+
+  /* PC: 그리드 갤러리 표시, 스와이프 갤러리 숨김 */
+  .modal-gallery-swipe {
+    display: none;
+  }
+
+  .modal-gallery-grid {
+    display: grid;
+  }
+
+  .gallery-dots {
+    display: none; /* PC에서는 인디케이터 숨김 */
   }
 }
 

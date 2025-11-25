@@ -93,9 +93,10 @@ function ProductDetailModal() {
             <div className="gallery-header">
               <h4>실제 설치 사진</h4>
               <span className="gallery-counter">
-                {currentImageIndex + 1} / {product.galleryImages.length}
+                {product.galleryImages.length}장
               </span>
             </div>
+            {/* 모바일: 스와이프 갤러리 */}
             <div
               className="modal-gallery-swipe"
               ref={galleryRef}
@@ -122,6 +123,22 @@ function ProductDetailModal() {
                   </div>
                 ))}
               </div>
+            </div>
+            {/* PC: 그리드 갤러리 */}
+            <div className="modal-gallery-grid">
+              {product.galleryImages.map((src, index) => (
+                <button
+                  key={src}
+                  type="button"
+                  className="gallery-grid-item"
+                  onClick={() => handleImageClick(index)}
+                >
+                  <img src={src} alt={`${product.name} 설치 ${index + 1}`} loading="lazy" />
+                  <div className="gallery-grid-overlay">
+                    <span>클릭하여 확대</span>
+                  </div>
+                </button>
+              ))}
             </div>
             {product.galleryImages.length > 1 && (
               <div className="gallery-dots">

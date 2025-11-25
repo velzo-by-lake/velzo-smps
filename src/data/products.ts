@@ -47,6 +47,7 @@ export const products: Product[] = [
     galleryImages: [
       '/images/real/shade_s/1.jpg',
       '/images/real/shade_s/2.jpg',
+      '/images/real/shade_s/3.jpg',
     ],
   },
   {
@@ -78,6 +79,7 @@ export const products: Product[] = [
     galleryImages: [
       '/images/real/ball_s/1.jpg',
       '/images/real/ball_s/2.jpg',
+      '/images/real/ball_s/3.jpg',
     ],
   },
   {
@@ -93,6 +95,7 @@ export const products: Product[] = [
     galleryImages: [
       '/images/real/ball_l/1.jpg',
       '/images/real/ball_l/2.jpg',
+      '/images/real/ball_l/3.jpg',
     ],
   },
   {
@@ -108,6 +111,7 @@ export const products: Product[] = [
     galleryImages: [
       '/images/real/half_s/1.jpg',
       '/images/real/half_s/2.jpg',
+      '/images/real/half_s/3.jpg',
     ],
   },
   {
@@ -123,6 +127,7 @@ export const products: Product[] = [
     galleryImages: [
       '/images/real/half_l/1.jpg',
       '/images/real/half_l/2.jpg',
+      '/images/real/half_l/3.jpg',
     ],
   },
   {
@@ -154,6 +159,7 @@ export const products: Product[] = [
     galleryImages: [
       '/images/real/spot/1.jpg',
       '/images/real/spot/2.jpg',
+      '/images/real/spot/3.jpg',
     ],
   },
 ]
