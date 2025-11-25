@@ -11,7 +11,7 @@
   backdrop-filter: blur(20px);
   border-top: 2px solid var(--border);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
-  padding: 12px 16px;
+  padding: 10px 12px;
   box-sizing: border-box;
 }
 
@@ -20,7 +20,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .price-info {
@@ -30,13 +30,13 @@
 .price-main {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 4px;
+  gap: 3px;
+  margin-bottom: 3px;
 }
 
 .price-label {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -58,7 +58,7 @@
 
 .price-discount {
   color: var(--accent);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 8px rgba(246, 223, 180, 0.3);
@@ -66,7 +66,7 @@
 
 .price-normal {
   color: var(--text);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -97,9 +97,9 @@
 
 .discount-badge {
   color: white;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
   font-weight: 800;
   white-space: nowrap;
   animation: pulse 2s ease-in-out infinite;
@@ -131,26 +131,26 @@
 .price-details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 0.75rem;
+  gap: 3px;
+  font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.8);
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 .discount-amount {
   color: var(--accent);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .time-remaining {
   color: #4CAF50;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   animation: blink 1s ease-in-out infinite;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   text-shadow: 0 1px 3px rgba(76, 175, 80, 0.3);
 }
 
@@ -172,24 +172,25 @@
 .discount-upgrade-hint {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: 4px;
+  padding: 6px 8px;
   background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 135, 135, 0.15));
-  border: 2px solid rgba(255, 107, 107, 0.4);
-  border-radius: 8px;
-  margin-top: 6px;
+  border: 1.5px solid rgba(255, 107, 107, 0.4);
+  border-radius: 6px;
+  margin-top: 4px;
   animation: glow 2s ease-in-out infinite;
 }
 
 .hint-icon {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   line-height: 1;
   animation: sparkle 1.5s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .hint-text {
-  font-size: 0.8rem;
-  line-height: 1.3;
+  font-size: 0.7rem;
+  line-height: 1.2;
   color: rgba(255, 255, 255, 0.95);
   flex: 1;
 }
@@ -229,7 +230,7 @@
 .price-actions {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   width: 100%;
 }
 
@@ -237,19 +238,19 @@
 .inquiry-btn,
 .purchase-btn {
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   box-sizing: border-box;
@@ -297,20 +298,21 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* 구매 유도 메시지 */
+/* 구매 유도 메시지 - 모바일에서 숨김 */
 .purchase-encouragement {
-  margin-top: 6px;
-  padding: 8px 10px;
-  background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(255, 135, 135, 0.12));
-  border: 2px solid rgba(255, 107, 107, 0.3);
-  border-radius: 8px;
-  animation: glow 2s ease-in-out infinite;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .purchase-encouragement {
+    display: none; /* PC에서도 숨김 */
+  }
 }
 
 .encouragement-text {
   margin: 0 0 4px;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.75rem;
+  line-height: 1.3;
   color: rgba(255, 255, 255, 0.95);
   font-weight: 600;
 }

@@ -40,7 +40,7 @@ body {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 0 0 140px; /* 하단 고정 패널 공간 (줄임) */
+  padding: 0 0 120px; /* 하단 고정 패널 공간 (최적화) */
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -829,7 +829,7 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 50;
+  z-index: 200;
   padding: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
