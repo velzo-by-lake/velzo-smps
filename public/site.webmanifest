@@ -1,0 +1,23 @@
+{
+  "name": "VELZO Belt Lighting Simulator",
+  "short_name": "VELZO",
+  "description": "VELZO 벨트 조명 시뮬레이터 - 모듈형 조명을 자유롭게 배치하고 견적을 확인하세요",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#020203",
+  "background_color": "#020203",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait-primary"
+}
+
