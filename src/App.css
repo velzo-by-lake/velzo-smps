@@ -23,10 +23,14 @@ body {
   background: radial-gradient(circle at top, rgba(246, 223, 180, 0.18), transparent 35%),
     linear-gradient(145deg, #040407 0%, #090812 70%, #05050a 100%);
   color: var(--text);
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
 }
 
 #root {
   min-height: 100vh;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  width: 100%;
 }
 
 .app {
@@ -36,6 +40,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 32px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
 }
 
 .top-banner {
@@ -544,10 +551,14 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 50;
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-card {
   width: min(900px, 90vw);
+  max-width: 100%;
   background: rgba(12, 12, 20, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 28px;
@@ -556,17 +567,35 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
 .modal-close {
   position: absolute;
   right: 24px;
   top: 20px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   color: var(--text);
   font-size: 1.8rem;
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
 }
 
 .modal-main {
@@ -848,59 +877,332 @@ body {
   }
 }
 
+/* 모바일 최적화 (600px 이하) */
 @media (max-width: 600px) {
   .top-banner {
-    padding: 10px 0;
+    padding: 8px 0;
   }
 
   .banner-content {
-    padding: 0 16px;
-    gap: 12px;
+    padding: 0 12px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .banner-links {
-    gap: 6px;
+    gap: 4px;
+    width: 100%;
+    order: 1;
   }
 
   .banner-link {
-    padding: 10px 12px;
-    font-size: 0.8rem;
+    padding: 10px 10px;
+    font-size: 0.75rem;
     min-height: 44px;
+    flex: 1 1 calc(50% - 2px);
+    min-width: 0;
+    justify-content: center;
   }
 
   .banner-link .link-icon {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .banner-link .link-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    display: none; /* 모바일에서는 아이콘만 표시 */
   }
 
   .phone-button {
-    padding: 12px 16px;
-    font-size: 0.9rem;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    width: 100%;
+    order: 2;
+    margin-top: 4px;
   }
 
   .phone-icon {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .phone-number {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .app {
-    padding: 24px 16px 60px;
+    padding: 16px 12px 140px; /* 하단 패딩 증가 (PriceSummary 공간) */
+    gap: 20px;
   }
 
-  .canvas-zone {
-    padding: 24px;
+  .sim-header {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .sim-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .header-metrics {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .header-metrics > div {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 16px;
+  }
+
+  .main-grid {
+    gap: 20px;
+  }
+
+  .catalog {
+    padding: 20px;
+    position: relative;
   }
 
   .catalog-card {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
+    text-align: left;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .catalog-card img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .canvas-zone {
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .canvas-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+  }
+
+  .belt-row {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .belt-wrapper {
+    padding: 8px;
+  }
+
+  .belt-accordion {
+    padding: 12px 16px;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+  }
+
+  .belt-accordion strong {
+    font-size: 1.1rem;
+  }
+
+  .belt-delete-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+    right: 8px;
+  }
+
+  .gallery-panel {
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .gallery-card {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .gallery-card img {
+    height: 100px;
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end; /* 모바일에서는 하단 정렬 */
+  }
+
+  .modal-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+    max-height: 90vh;
+    margin: 0;
+  }
+
+  .modal-close {
+    right: 16px;
+    top: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .modal-main {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .modal-hero {
+    width: 100%;
+    height: 180px;
+  }
+
+  .modal-info h3 {
+    font-size: 1.3rem;
+  }
+
+  .modal-eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .modal-spec {
+    font-size: 0.85rem;
+  }
+
+  .modal-description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .primary-btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    min-height: 48px;
+  }
+
+  .modal-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .gallery-item img {
+    height: 120px;
+  }
+
+  .modal-lightbox img {
+    width: 95vw;
+    max-height: 85vh;
+  }
+
+  .lightbox-close {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+}
+
+/* 매우 작은 화면 (480px 이하) */
+@media (max-width: 480px) {
+  .app {
+    padding: 12px 8px 140px;
+    gap: 16px;
+  }
+
+  .sim-header {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .sim-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .catalog {
+    padding: 16px;
+  }
+
+  .catalog-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .catalog-card img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .canvas-zone {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .belt-row {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .gallery-panel {
+    padding: 16px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gallery-card img {
+    height: 120px;
+  }
+
+  .banner-link .link-text {
+    display: none; /* 매우 작은 화면에서는 텍스트 숨김 */
+  }
+}
+
+/* 터치 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  /* 터치 디바이스에서만 적용 */
+  .banner-link,
+  .phone-button,
+  .catalog-card,
+  .gallery-card,
+  .primary-btn,
+  .tab-btn {
+    -webkit-tap-highlight-color: rgba(246, 223, 180, 0.2);
+    touch-action: manipulation; /* 더블 탭 줌 방지 */
+  }
+
+  .banner-link:hover,
+  .phone-button:hover,
+  .catalog-card:hover,
+  .gallery-card:hover {
+    transform: none; /* 터치 디바이스에서는 호버 효과 제거 */
+  }
+
+  .banner-link:active,
+  .phone-button:active,
+  .catalog-card:active,
+  .gallery-card:active {
+    transform: scale(0.98);
+    opacity: 0.9;
   }
 }
 

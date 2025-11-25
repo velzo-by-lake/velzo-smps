@@ -312,32 +312,136 @@
   cursor: not-allowed;
 }
 
+/* 모바일 최적화 (600px 이하) */
 @media (max-width: 600px) {
+  .gallery-actions {
+    margin-top: 16px;
+  }
+
+  .gallery-inquiry-btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    min-height: 48px;
+  }
+
+  .gallery-inquiry-modal-overlay {
+    padding: 12px;
+    align-items: flex-end; /* 모바일에서는 하단 정렬 */
+  }
+
   .gallery-inquiry-modal-content {
-    padding: 24px;
-    max-height: 95vh;
+    padding: 20px;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .modal-close-btn {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+  }
+
+  .gallery-inquiry-modal-content h3 {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    padding-right: 40px;
+  }
+
+  .modal-description {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .image-upload-section {
+    margin-bottom: 16px;
+  }
+
+  .image-upload-button {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    min-height: 48px;
+    width: 100%;
+    justify-content: center;
   }
 
   .selected-images {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 8px;
+    margin-top: 12px;
+  }
+
+  .remove-image-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 1rem;
+    top: 2px;
+    right: 2px;
+  }
+
+  .phone-section {
+    margin-bottom: 16px;
+  }
+
+  .required-label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
   }
 
   .phone-input-wrapper {
     flex-direction: column;
+    gap: 8px;
+  }
+
+  .phone-input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    min-height: 48px;
   }
 
   .call-now-btn {
     width: 100%;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    min-height: 48px;
+  }
+
+  .phone-hint {
+    font-size: 0.8rem;
+    margin-top: 6px;
+  }
+
+  .inquiry-message-section {
+    margin-bottom: 16px;
+  }
+
+  .inquiry-message-section label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  .inquiry-textarea {
+    padding: 12px;
+    font-size: 0.9rem;
+    min-height: 100px;
   }
 
   .modal-actions {
     flex-direction: column;
+    gap: 8px;
   }
 
   .cancel-btn,
   .submit-btn {
     width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    min-height: 48px;
   }
 }
 
