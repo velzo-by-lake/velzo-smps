@@ -1,76 +1,99 @@
+/* ============================================
+   하단 고정 가격 패널 - 대기업 스타일 (모바일 우선)
+   ============================================ */
 .price-summary-fixed {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(2, 2, 3, 0.95);
+  background: rgba(2, 2, 3, 0.98);
   backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
-  padding: 20px 32px;
+  border-top: 2px solid var(--border);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .price-summary-content {
-  max-width: 1440px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .price-info {
-  flex: 1;
+  width: 100%;
 }
 
 .price-main {
   display: flex;
-  align-items: baseline;
-  gap: 16px;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 8px;
 }
 
 .price-label {
   color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .price-values {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .price-original {
   text-decoration: line-through;
   color: var(--muted);
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .price-discount {
   color: var(--accent);
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.price-normal {
+  color: var(--text);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.price-empty {
+  color: var(--muted);
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .discount-badge {
   color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
   animation: pulse 2s ease-in-out infinite;
 }
 
 .discount-badge.time {
   background: linear-gradient(135deg, #4CAF50, #45a049);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
 .discount-badge.special {
   background: linear-gradient(135deg, #ff6b6b, #ff8787);
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
 @keyframes pulse {
@@ -80,26 +103,17 @@
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 8px rgba(255, 107, 107, 0);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0);
   }
-}
-
-.price-normal {
-  color: var(--text);
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-.price-empty {
-  color: var(--muted);
-  font-size: 1.2rem;
 }
 
 .price-details {
   display: flex;
-  gap: 16px;
-  font-size: 0.85rem;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
   color: var(--muted);
+  margin-top: 4px;
 }
 
 .discount-amount {
@@ -110,8 +124,16 @@
 .time-remaining {
   color: #4CAF50;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   animation: blink 1s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.time-remaining::before {
+  content: '⏰';
+  font-size: 0.9rem;
 }
 
 @keyframes blink {
@@ -125,32 +147,47 @@
 
 .price-actions {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
 .catalog-btn,
 .inquiry-btn,
 .purchase-btn {
-  padding: 14px 24px;
+  width: 100%;
+  padding: 16px 20px;
   border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
   white-space: nowrap;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-sizing: border-box;
+}
+
+.catalog-btn:active,
+.inquiry-btn:active,
+.purchase-btn:active {
+  transform: scale(0.98);
 }
 
 .catalog-btn {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.catalog-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
+.catalog-btn:active {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .inquiry-btn {
@@ -159,254 +196,36 @@
   box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
 }
 
-.inquiry-btn:hover {
-  background: linear-gradient(135deg, #5a95f5, #4cb863);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+.inquiry-btn:active {
+  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
 }
 
 .purchase-btn {
   background: linear-gradient(135deg, #FF6B35, #F7931E);
   color: white;
   box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
-  font-weight: 700;
 }
 
-.purchase-btn:hover {
-  background: linear-gradient(135deg, #ff7d4a, #ffa347);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.5);
+.purchase-btn:active {
+  box-shadow: 0 2px 10px rgba(255, 107, 53, 0.4);
 }
 
-/* 태블릿 및 작은 화면 (768px 이하) */
-@media (max-width: 768px) {
-  .price-summary-fixed {
-    padding: 16px 20px;
-  }
-
-  .price-summary-content {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-
-  .price-main {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .price-values {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .price-discount {
-    font-size: 1.5rem;
-  }
-
-  .price-actions {
-    flex-direction: column;
-  }
-
-  .catalog-btn,
-  .inquiry-btn,
-  .purchase-btn {
-    width: 100%;
-    min-height: 48px; /* 터치 친화적 */
-  }
-}
-
-/* 모바일 최적화 (600px 이하) */
-@media (max-width: 600px) {
-  .price-summary-fixed {
-    padding: 12px 16px;
-    border-top-width: 2px;
-  }
-
-  .price-summary-content {
-    gap: 12px;
-  }
-
-  .price-label {
-    font-size: 0.8rem;
-  }
-
-  .price-main {
-    gap: 6px;
-  }
-
-  .price-values {
-    gap: 6px;
-  }
-
-  .price-original {
-    font-size: 0.95rem;
-  }
-
-  .price-discount,
-  .price-normal {
-    font-size: 1.4rem;
-  }
-
-  .price-empty {
-    font-size: 1rem;
-  }
-
-  .price-details {
-    flex-direction: column;
-    gap: 6px;
-    font-size: 0.8rem;
-  }
-
-  .discount-badge {
-    font-size: 0.75rem;
-    padding: 3px 10px;
-  }
-
-  .time-remaining {
-    font-size: 0.8rem;
-  }
-
-  .price-actions {
-    gap: 8px;
-  }
-
-  .catalog-btn,
-  .inquiry-btn,
-  .purchase-btn {
-    padding: 12px 16px;
-    font-size: 0.9rem;
-    min-height: 48px;
-    border-radius: 10px;
-  }
-}
-
-/* Inquiry Modal */
-.inquiry-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.inquiry-modal-content {
-  background: var(--panel);
-  border-radius: 24px;
-  border: 1px solid var(--border);
-  padding: 32px;
-  max-width: 400px;
-  width: 90%;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.inquiry-modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 2rem;
-  cursor: pointer;
-  line-height: 1;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.inquiry-modal-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text);
-}
-
-.inquiry-modal-content h3 {
-  margin: 0 0 12px;
-  font-size: 1.5rem;
-  color: var(--text);
-}
-
-.inquiry-modal-text {
-  margin: 0 0 24px;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-.inquiry-modal-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.inquiry-call-btn,
-.inquiry-sms-btn {
-  padding: 16px 24px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  width: 100%;
-}
-
-.inquiry-call-btn {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.inquiry-call-btn:hover {
-  background: linear-gradient(135deg, #5CBF60, #4CAF50);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-}
-
-.inquiry-sms-btn {
-  background: linear-gradient(135deg, #2196F3, #1976D2);
-  color: white;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-}
-
-.inquiry-sms-btn:hover {
-  background: linear-gradient(135deg, #42A5F5, #2196F3);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
-}
-
-.inquiry-phone {
-  text-align: center;
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-}
-
-/* Purchase Modal */
+/* ============================================
+   구매 모달 - 대기업 스타일
+   ============================================ */
 .purchase-modal-overlay {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   z-index: 10000 !important;
-  padding: 15px;
+  padding: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
@@ -414,17 +233,18 @@
 }
 
 .purchase-modal-content {
-  background: var(--panel);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  padding: 18px;
-  max-width: 480px;
+  background: rgba(12, 12, 20, 0.98);
+  border-radius: 20px 20px 0 0;
+  border: none;
+  border-top: 2px solid var(--border);
+  padding: 24px 16px;
+  max-width: 100%;
   width: 100%;
-  max-height: calc(100vh - 30px);
+  max-height: 85vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  margin: auto;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
+  margin: 0;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
   transform: translateZ(0);
@@ -432,131 +252,141 @@
 
 .purchase-modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   color: var(--text);
   font-size: 1.5rem;
   cursor: pointer;
   line-height: 1;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   transition: all 0.2s ease;
   z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.purchase-modal-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(90deg);
+.purchase-modal-close:active {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg) scale(0.95);
 }
 
 .purchase-modal-content h3 {
-  margin: 0 0 4px;
-  font-size: 1.2rem;
+  margin: 0 0 8px;
+  font-size: 1.3rem;
   color: var(--text);
-  padding-right: 32px;
+  padding-right: 40px;
+  font-weight: 700;
 }
 
 .purchase-modal-description {
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.3;
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .purchase-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .purchase-option-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
   transition: all 0.2s ease;
 }
 
-.purchase-option-card:hover {
-  background: rgba(255, 255, 255, 0.05);
+.purchase-option-card:active {
+  background: rgba(255, 255, 255, 0.08);
   border-color: rgba(246, 223, 180, 0.3);
 }
 
 .option-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 3px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .option-icon {
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1;
 }
 
 .option-header h4 {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .option-description {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   color: var(--muted);
-  font-size: 0.75rem;
-  line-height: 1.2;
+  font-size: 0.85rem;
+  line-height: 1.4;
 }
 
 .phone-input-section {
   display: flex;
+  flex-direction: column;
   gap: 8px;
   align-items: stretch;
 }
 
 .purchase-phone-input {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
   border: 2px solid var(--border);
   color: var(--text);
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-family: inherit;
   transition: all 0.2s ease;
+  box-sizing: border-box;
+  min-height: 52px;
+  -webkit-appearance: none;
 }
 
 .purchase-phone-input:focus {
   outline: none;
   border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 0 0 3px rgba(246, 223, 180, 0.1);
 }
 
 .contact-submit-btn {
-  padding: 8px 14px;
-  border-radius: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 10px;
   background: linear-gradient(135deg, #4285F4, #34A853);
   color: white;
-  font-weight: 600;
-  font-size: 0.8rem;
+  font-weight: 700;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.contact-submit-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #5a95f5, #4cb863);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+.contact-submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
 }
 
 .contact-submit-btn:disabled {
@@ -566,126 +396,117 @@
 
 .kakao-inquiry-btn {
   width: 100%;
-  padding: 9px 14px;
-  border-radius: 8px;
+  padding: 14px 20px;
+  border-radius: 10px;
   background: linear-gradient(135deg, #fee500, #fdd835);
   color: #3c1e1e;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(254, 229, 0, 0.3);
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.kakao-inquiry-btn:hover {
-  background: linear-gradient(135deg, #ffe033, #fee500);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(254, 229, 0, 0.4);
+.kakao-inquiry-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(254, 229, 0, 0.3);
 }
 
 .call-now-purchase-btn {
   width: 100%;
-  padding: 9px 14px;
-  border-radius: 8px;
+  padding: 14px 20px;
+  border-radius: 10px;
   background: linear-gradient(135deg, #4CAF50, #45a049);
   color: white;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.call-now-purchase-btn:hover {
-  background: linear-gradient(135deg, #5CBF60, #4CAF50);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+.call-now-purchase-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
-@media (max-width: 600px) {
-  .purchase-modal-overlay {
-    padding: 8px;
+/* ============================================
+   데스크톱 스타일 (768px 이상)
+   ============================================ */
+@media (min-width: 768px) {
+  .price-summary-fixed {
+    padding: 20px 32px;
+  }
+
+  .price-summary-content {
+    max-width: 1440px;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
+    gap: 32px;
+  }
+
+  .price-main {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .price-values {
+    gap: 12px;
+  }
+
+  .price-discount,
+  .price-normal {
+    font-size: 1.8rem;
+  }
+
+  .price-details {
+    flex-direction: row;
+    gap: 16px;
+    font-size: 0.85rem;
+  }
+
+  .price-actions {
+    flex-direction: row;
+    width: auto;
+    gap: 12px;
+  }
+
+  .catalog-btn,
+  .inquiry-btn,
+  .purchase-btn {
+    width: auto;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+
+  .purchase-modal-overlay {
+    align-items: center;
+    padding: 20px;
   }
 
   .purchase-modal-content {
-    padding: 14px;
-    max-height: calc(100vh - 16px);
+    max-width: 480px;
+    width: 100%;
+    border-radius: 16px;
+    padding: 24px;
     margin: 0;
-    border-radius: 14px;
-  }
-
-  .purchase-modal-close {
-    top: 10px;
-    right: 10px;
-    width: 28px;
-    height: 28px;
-    font-size: 1.3rem;
-  }
-
-  .purchase-modal-content h3 {
-    font-size: 1.1rem;
-    margin-bottom: 3px;
-    padding-right: 30px;
-  }
-
-  .purchase-modal-description {
-    font-size: 0.75rem;
-    margin-bottom: 10px;
-    line-height: 1.2;
-  }
-
-  .purchase-options {
-    gap: 6px;
-  }
-
-  .purchase-option-card {
-    padding: 10px;
-    border-radius: 10px;
-  }
-
-  .option-header {
-    gap: 5px;
-    margin-bottom: 2px;
-  }
-
-  .option-icon {
-    font-size: 1rem;
-  }
-
-  .option-header h4 {
-    font-size: 0.85rem;
-  }
-
-  .option-description {
-    font-size: 0.7rem;
-    margin-bottom: 6px;
-    line-height: 1.1;
   }
 
   .phone-input-section {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .purchase-phone-input {
-    padding: 8px 10px;
-    font-size: 0.85rem;
+    flex-direction: row;
   }
 
   .contact-submit-btn {
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 0.85rem;
-  }
-
-  .kakao-inquiry-btn,
-  .call-now-purchase-btn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    border-radius: 8px;
+    width: auto;
   }
 }
-
