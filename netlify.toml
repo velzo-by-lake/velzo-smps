@@ -2,23 +2,39 @@
   command = "npm run build"
   publish = "dist"
 
+# JavaScript 모듈 파일에 대한 올바른 MIME type 설정
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/*.js"
   [headers.values]
     Content-Type = "application/javascript; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/assets/*.mjs"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
 
 [[headers]]
   for = "/*.js"
   [headers.values]
     Content-Type = "application/javascript; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
 
 [[headers]]
   for = "/*.mjs"
   [headers.values]
     Content-Type = "application/javascript; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
 
+# CSS 파일
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Content-Type = "text/css; charset=utf-8"
+
+# SPA 라우팅을 위한 리다이렉트
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
