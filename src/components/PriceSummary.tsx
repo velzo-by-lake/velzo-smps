@@ -103,8 +103,8 @@ function PriceSummary() {
   }, [firstLightTime, discountInfo, currentTime])
 
   const handleCatalogRequest = () => {
-    // 사업자 특별 카탈로그 무료 받기 - 설문조사 페이지로 이동
-    window.open('https://forms.gle/...', '_blank')
+    // 사업자 특별 카탈로그 무료 받기 - Google Drive 링크로 이동
+    window.open('https://drive.google.com/file/d/12SIP2TCMUVXqb__WT78hZuKsu5-WyDyv/view?usp=sharing', '_blank')
   }
 
   const sendTelegramNotification = async (action: string, phone?: string) => {
