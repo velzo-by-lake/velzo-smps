@@ -17,10 +17,10 @@ type BeltCanvasProps = {
   onStageReady: (stage: KonvaStage | null) => void
 }
 
-const DEFAULT_WIDTH = 760
-const DEFAULT_HEIGHT = 200
-const MAX_WIDTH = 1200 // 최대 너비 제한
-const padding = 32
+const DEFAULT_WIDTH = 600
+const DEFAULT_HEIGHT = 150
+const MAX_WIDTH = 800 // 최대 너비 제한
+const padding = 24
 
 const clampX = (value: number, width: number, trackWidth: number) => {
   const min = padding + width / 2
@@ -171,9 +171,9 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0]
       const containerWidth = entry.contentRect.width
-      // 최대 너비 제한
+      // 최대 너비 제한 및 높이 최소화
       const width = Math.min(containerWidth, MAX_WIDTH)
-      const height = Math.max(180, Math.min(220, width * 0.18))
+      const height = Math.max(120, Math.min(150, width * 0.15))
       setCanvasSize({ width, height })
     })
     observer.observe(containerRef.current)
@@ -285,48 +285,48 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
           <Layer>
             <Rect
               x={padding / 2}
-              y={trackHeight / 2 - 35}
-              width={20}
-              height={70}
+              y={trackHeight / 2 - 25}
+              width={16}
+              height={50}
               fill="#2c2f36"
-              cornerRadius={6}
+              cornerRadius={4}
             />
             <Rect
-              x={trackWidth - padding / 2 - 20}
-              y={trackHeight / 2 - 35}
-              width={20}
-              height={70}
+              x={trackWidth - padding / 2 - 16}
+              y={trackHeight / 2 - 25}
+              width={16}
+              height={50}
               fill="#2c2f36"
-              cornerRadius={6}
+              cornerRadius={4}
             />
             <Rect
               x={padding}
-              y={trackHeight / 2 - 35}
+              y={trackHeight / 2 - 25}
               width={trackWidth - padding * 2}
-              height={60}
-              cornerRadius={30}
+              height={45}
+              cornerRadius={22}
               fillLinearGradientStartPoint={{ x: 0, y: 0 }}
               fillLinearGradientEndPoint={{ x: trackWidth, y: 0 }}
               fillLinearGradientColorStops={[0, '#1b1b1f', 1, '#24262d']}
-              shadowBlur={40}
-              shadowColor="rgba(0,0,0,0.55)"
+              shadowBlur={20}
+              shadowColor="rgba(0,0,0,0.4)"
             />
             <Rect
-              x={padding + 4}
-              y={trackHeight / 2 - 42}
-              width={trackWidth - (padding + 4) * 2}
-              height={12}
+              x={padding + 3}
+              y={trackHeight / 2 - 30}
+              width={trackWidth - (padding + 3) * 2}
+              height={8}
               fill="rgba(246,223,180,0.12)"
-              cornerRadius={6}
+              cornerRadius={4}
             />
             <Rect
               x={padding}
-              y={trackHeight / 2 + 15}
+              y={trackHeight / 2 + 12}
               width={trackWidth - padding * 2}
-              height={20}
-              fill="rgba(0,0,0,0.35)"
-              shadowBlur={30}
-              shadowColor="rgba(0,0,0,0.4)"
+              height={12}
+              fill="rgba(0,0,0,0.3)"
+              shadowBlur={15}
+              shadowColor="rgba(0,0,0,0.3)"
               opacity={0.5}
             />
             {belt.lights.map((light) => (
