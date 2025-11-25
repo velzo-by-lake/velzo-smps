@@ -10,7 +10,6 @@ import {
   getStatus,
   getUsagePercent,
 } from '../utils/watt'
-import { exportBeltSummaryJSON, exportStageAsPNG } from '../utils/exporters'
 import type { Stage } from 'konva/lib/Stage'
 
 type PowerSummaryProps = {
@@ -77,14 +76,6 @@ function PowerSummary({ belt, stage }: PowerSummaryProps) {
           <div style={{ width: `${Math.min(absolutePercent, 110)}%` }} />
         </div>
         <span>{absolutePercent.toFixed(1)}%</span>
-      </div>
-      <div className="summary-actions">
-        <button type="button" onClick={() => exportStageAsPNG(stage, `belt-${belt.id}.png`)}>
-          PNG 내보내기
-        </button>
-        <button type="button" className="ghost" onClick={() => exportBeltSummaryJSON(belt)}>
-          JSON 견적
-        </button>
       </div>
       <div className="lottie-box" ref={lottieContainer} />
     </div>

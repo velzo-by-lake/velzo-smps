@@ -32,10 +32,155 @@ body {
 .app {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 40px 32px 80px;
+  padding: 40px 32px 120px; /* 하단 패딩 증가 (PriceSummary 공간) */
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+.top-banner {
+  background: rgba(22, 22, 29, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.banner-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.banner-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.banner-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  min-height: 48px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.banner-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.banner-link .link-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.banner-link .link-text {
+  line-height: 1.2;
+}
+
+/* 홈페이지 */
+.banner-link.home:hover {
+  background: linear-gradient(135deg, rgba(246, 223, 180, 0.2), rgba(230, 200, 150, 0.2));
+  border-color: rgba(246, 223, 180, 0.4);
+  color: var(--accent);
+}
+
+/* 네이버 플레이스 */
+.banner-link.naver {
+  background: rgba(3, 199, 90, 0.1);
+  border-color: rgba(3, 199, 90, 0.3);
+  color: #03c75a;
+}
+
+.banner-link.naver:hover {
+  background: rgba(3, 199, 90, 0.2);
+  border-color: #03c75a;
+  box-shadow: 0 8px 24px rgba(3, 199, 90, 0.3);
+}
+
+/* 인스타그램 */
+.banner-link.instagram {
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.15), rgba(245, 96, 64, 0.15));
+  border-color: rgba(225, 48, 108, 0.4);
+  color: #e1306c;
+}
+
+.banner-link.instagram:hover {
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.25), rgba(245, 96, 64, 0.25));
+  border-color: #e1306c;
+  box-shadow: 0 8px 24px rgba(225, 48, 108, 0.4);
+}
+
+/* 카카오톡 */
+.banner-link.kakao {
+  background: rgba(255, 232, 18, 0.15);
+  border-color: rgba(255, 232, 18, 0.4);
+  color: #fee500;
+}
+
+.banner-link.kakao:hover {
+  background: rgba(255, 232, 18, 0.25);
+  border-color: #fee500;
+  box-shadow: 0 8px 24px rgba(255, 232, 18, 0.3);
+  color: #3c1e1e;
+}
+
+/* 전화 버튼 */
+.phone-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  min-height: 48px;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: 2px solid transparent;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+}
+
+.phone-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(76, 175, 80, 0.5);
+  background: linear-gradient(135deg, #5CBF60, #4CAF50);
+}
+
+.phone-button:active {
+  transform: translateY(0);
+}
+
+.phone-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.phone-number {
+  letter-spacing: 0.5px;
+  font-size: 1.05rem;
 }
 
 .sim-header {
@@ -275,8 +420,14 @@ body {
   margin-top: 0;
 }
 
+.belt-accordion-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .belt-accordion {
-  width: 100%;
+  flex: 1;
   background: rgba(255, 255, 255, 0.02);
   border: none;
   border-radius: 24px;
@@ -287,6 +438,38 @@ body {
   align-items: center;
   color: inherit;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.belt-accordion:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.belt-delete-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff6b6b;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.belt-delete-btn:hover {
+  background: rgba(255, 107, 107, 0.2);
+  border-color: #ff6b6b;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .belt-accordion strong {
@@ -592,6 +775,44 @@ body {
 }
 
 @media (max-width: 820px) {
+  .top-banner {
+    padding: 12px 0;
+  }
+
+  .banner-content {
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 20px;
+  }
+
+  .banner-links {
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .banner-link {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  .banner-link .link-text {
+    font-size: 0.85rem;
+  }
+
+  .phone-button {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+
+  .phone-number {
+    font-size: 1rem;
+  }
+
   .sim-header {
     flex-direction: column;
   }
@@ -616,6 +837,46 @@ body {
 }
 
 @media (max-width: 600px) {
+  .top-banner {
+    padding: 10px 0;
+  }
+
+  .banner-content {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .banner-links {
+    gap: 6px;
+  }
+
+  .banner-link {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    min-height: 44px;
+  }
+
+  .banner-link .link-icon {
+    font-size: 1rem;
+  }
+
+  .banner-link .link-text {
+    font-size: 0.75rem;
+  }
+
+  .phone-button {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .phone-icon {
+    font-size: 1.1rem;
+  }
+
+  .phone-number {
+    font-size: 0.9rem;
+  }
+
   .app {
     padding: 24px 16px 60px;
   }
@@ -628,6 +889,48 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+}
+
+/* Page Tabs */
+.page-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+  top: 1px;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .page-tabs {
+    padding: 0 16px;
+  }
+
+  .tab-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
   }
 }
 

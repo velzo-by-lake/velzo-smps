@@ -215,6 +215,15 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
     if (!activeProduct) return
     const stage = stageRef.current
     if (!stage) return
+    
+    // 벨트가 비어있으면 왼쪽 끝부터 배치
+    if (belt.lights.length === 0) {
+      const productWidthPx = projectWidth(activeProduct.width)
+      const positionX = padding + productWidthPx / 2
+      addLight(belt.id, activeProduct, positionX)
+      return
+    }
+    
     const pointerPosition = stage.getPointerPosition()
     if (!pointerPosition) return
     const clamped = clampX(pointerPosition.x, projectWidth(activeProduct.width), trackWidth)
@@ -227,6 +236,15 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
     if (!product) return
     const stage = stageRef.current
     if (!stage) return
+    
+    // 벨트가 비어있으면 왼쪽 끝부터 배치
+    if (belt.lights.length === 0) {
+      const productWidthPx = projectWidth(product.width)
+      const positionX = padding + productWidthPx / 2
+      addLight(belt.id, product, positionX)
+      return
+    }
+    
     const container = stage.container()
     const rect = container.getBoundingClientRect()
     const relativeX = event.clientX - rect.left

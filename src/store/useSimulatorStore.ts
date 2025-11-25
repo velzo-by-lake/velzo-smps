@@ -40,6 +40,7 @@ type SimulatorState = {
   modalProductId: string | null
   setActiveProduct: (product: Product | null) => void
   addBelt: () => void
+  removeBelt: (beltId: string) => void
   updateBeltLength: (beltId: string, length: number) => void
   addLightToBelt: (beltId: string, product: Product, positionX: number) => void
   moveLight: (beltId: string, lightId: string, positionX: number) => void
@@ -58,6 +59,13 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
     set((state) => ({
       belts: [...state.belts, createBelt()],
     })),
+  removeBelt: (beltId) =>
+    set((state) => {
+      if (state.belts.length <= 1) return state // 최소 1개는 유지
+      return {
+        belts: state.belts.filter((belt) => belt.id !== beltId),
+      }
+    }),
   updateBeltLength: (beltId, length) =>
     set((state) => ({
       belts: state.belts.map((belt) =>
@@ -70,6 +78,7 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
         if (belt.id !== beltId) return belt
         const newLight: LightItem = {
           id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 10),
+          productId: product.id,
           type: product.name,
           watt: product.watt,
           width: product.width,
@@ -106,11 +115,19 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
       const product = products.find((item) => item.id === productId)
       if (!product) return state
       const belts = state.belts.length ? state.belts : [createBelt()]
-      const positionX = 380
+      // 왼쪽 끝부터 배치 (padding + 제품 너비의 절반)
+      const DEFAULT_CANVAS_WIDTH = 760
+      const padding = 32
+      const beltLength = belts[0]?.length || 5
+      const beltCentimeter = beltLength * 100
+      const usableWidth = DEFAULT_CANVAS_WIDTH - padding * 2
+      const productWidthPx = Math.max((product.width / beltCentimeter) * usableWidth, 36)
+      const positionX = padding + productWidthPx / 2
       const updatedBelts = belts.map((belt, index) => {
         if (index !== 0) return belt
         const newLight: LightItem = {
           id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 10),
+          productId: product.id,
           type: product.name,
           watt: product.watt,
           width: product.width,

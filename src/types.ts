@@ -13,6 +13,7 @@ export type Product = {
 
 export type LightItem = {
   id: string
+  productId: string
   type: string
   watt: number
   width: number
