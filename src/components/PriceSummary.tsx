@@ -9,7 +9,9 @@ function PriceSummary() {
   const [firstLightTime, setFirstLightTime] = useState<number | null>(null)
   const [currentTime, setCurrentTime] = useState(Date.now())
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [showInquiryModal, setShowInquiryModal] = useState(false)
   const [purchasePhoneNumber, setPurchasePhoneNumber] = useState('')
+  const [inquiryPhoneNumber, setInquiryPhoneNumber] = useState('')
 
   // 첫 조명 배치 시간 추적
   useEffect(() => {
@@ -176,17 +178,21 @@ ${productList || '없음'}
     }
   }
 
-  const handleInquiry = async () => {
-    // 문의하기 - 텔레그램 알림 + 사용자에게 연락 옵션 제공
-    await sendTelegramNotification('inquiry')
-    
-    const userChoice = window.confirm(
-      '문의가 접수되었습니다!\n\n곧 연락드리겠습니다.\n\n지금 바로 전화 문의하시겠습니까?'
-    )
-    
-    if (userChoice) {
-      window.location.href = 'tel:010-7356-6036'
+  const handleInquiry = () => {
+    // 문의하기 모달 표시
+    setShowInquiryModal(true)
+  }
+
+  const handleInquirySubmit = async () => {
+    if (!inquiryPhoneNumber.trim()) {
+      alert('연락받을 전화번호를 입력해주세요.')
+      return
     }
+
+    await sendTelegramNotification('inquiry', inquiryPhoneNumber)
+    alert('문의가 접수되었습니다! 곧 연락드리겠습니다.')
+    setShowInquiryModal(false)
+    setInquiryPhoneNumber('')
   }
 
   const handlePurchase = () => {
@@ -271,6 +277,83 @@ ${productList || '없음'}
           )}
         </div>
       </div>
+
+      {showInquiryModal &&
+        createPortal(
+          <div className="purchase-modal-overlay" onClick={() => setShowInquiryModal(false)}>
+            <div className="purchase-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="purchase-modal-close"
+                onClick={() => setShowInquiryModal(false)}
+              >
+                ×
+              </button>
+              <h3>문의하기</h3>
+              <p className="purchase-modal-description">
+                전화번호를 남기시면 빠르게 연락드리겠습니다.
+              </p>
+
+              <div className="purchase-options">
+                <div className="purchase-option-card">
+                  <div className="option-header">
+                    <span className="option-icon">📞</span>
+                    <h4>연락처 남기기</h4>
+                  </div>
+                  <p className="option-description">전화번호를 입력해주세요.</p>
+                  <div className="phone-input-section">
+                    <input
+                      type="tel"
+                      className="purchase-phone-input"
+                      placeholder="010-1234-5678"
+                      value={inquiryPhoneNumber}
+                      onChange={(e) => setInquiryPhoneNumber(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="contact-submit-btn"
+                      onClick={handleInquirySubmit}
+                      disabled={!inquiryPhoneNumber.trim()}
+                    >
+                      문의 접수
+                    </button>
+                  </div>
+                </div>
+
+                <div className="purchase-option-card">
+                  <div className="option-header">
+                    <span className="option-icon">💬</span>
+                    <h4>카카오톡 문의</h4>
+                  </div>
+                  <p className="option-description">카카오톡으로 바로 문의하실 수 있습니다.</p>
+                  <button
+                    type="button"
+                    className="kakao-inquiry-btn"
+                    onClick={handleKakaoInquiry}
+                  >
+                    카카오톡으로 문의하기
+                  </button>
+                </div>
+
+                <div className="purchase-option-card">
+                  <div className="option-header">
+                    <span className="option-icon">📞</span>
+                    <h4>전화 문의</h4>
+                  </div>
+                  <p className="option-description">지금 바로 전화로 문의하실 수 있습니다.</p>
+                  <button
+                    type="button"
+                    className="call-now-purchase-btn"
+                    onClick={handleCallNow}
+                  >
+                    📞 010-7356-6036
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       {showPurchaseModal &&
         createPortal(

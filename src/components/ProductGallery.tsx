@@ -174,25 +174,15 @@ ${inquiryMessage || '사용자가 갤러리에서 문의를 요청했습니다.'
               <label htmlFor="phone-number" className="required-label">
                 연락받을 전화번호 <span className="required-mark">*</span>
               </label>
-              <div className="phone-input-wrapper">
-                <input
-                  id="phone-number"
-                  type="tel"
-                  className="phone-input"
-                  placeholder="010-1234-5678"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="call-now-btn"
-                  onClick={() => window.location.href = 'tel:010-7356-6036'}
-                  title="바로 전화하기"
-                >
-                  📞 바로 전화하기
-                </button>
-              </div>
+              <input
+                id="phone-number"
+                type="tel"
+                className="phone-input"
+                placeholder="010-1234-5678"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+              />
               <p className="phone-hint">전화번호를 남기시면 빠르게 연락드리겠습니다.</p>
             </div>
 
