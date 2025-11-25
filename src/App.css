@@ -684,11 +684,11 @@ body {
   background: transparent;
   border: none;
   border-radius: 0;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  gap: 12px;
+  padding: 12px 16px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   color: inherit;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -698,19 +698,52 @@ body {
   min-height: 56px;
 }
 
+.belt-header-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.belt-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.smps-price {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
 .belt-accordion:active {
   background: rgba(255, 255, 255, 0.05);
 }
 
 .belt-accordion strong {
-  font-size: 1.2rem;
-  margin-left: 0;
+  font-size: 1.1rem;
+  margin-left: 8px;
   font-weight: 700;
+  color: var(--text);
 }
 
 .belt-accordion .muted {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--muted);
+  font-weight: 600;
+}
+
+.belt-header-info .badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+
+.belt-header-info .muted {
+  font-size: 0.8rem;
 }
 
 .chevron {

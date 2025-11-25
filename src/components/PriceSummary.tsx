@@ -41,8 +41,10 @@ function PriceSummary() {
     return () => clearInterval(interval)
   }, [firstLightTime])
 
+  const SMPS_PRICE = 40000 // SMPS 하나당 4만원
+
   const totalPrice = useMemo(() => {
-    return belts.reduce((sum, belt) => {
+    const lightsPrice = belts.reduce((sum, belt) => {
       return (
         sum +
         belt.lights.reduce((beltSum, light) => {
@@ -51,6 +53,8 @@ function PriceSummary() {
         }, 0)
       )
     }, 0)
+    const smpsPrice = belts.length * SMPS_PRICE
+    return lightsPrice + smpsPrice
   }, [belts])
 
   const lightCount = useMemo(() => {
@@ -255,6 +259,7 @@ ${productList || '없음'}
           {totalPrice > 0 && (
             <div className="price-details">
               <span>모듈 {lightCount}개</span>
+              <span className="smps-info">SMPS {belts.length}개 ({(belts.length * SMPS_PRICE).toLocaleString()}원)</span>
               {discountInfo && (
                 <span className="discount-amount">할인: {discountInfo.discountAmount.toLocaleString()}원</span>
               )}

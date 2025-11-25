@@ -96,12 +96,17 @@ function App() {
                         className="belt-accordion"
                         onClick={() => toggleBelt(belt.id)}
                       >
-                        <div>
-                          <span className="muted">SMPS {index + 1}</span>
-                          <strong>{percent.toFixed(0)}%</strong>
+                        <div className="belt-header-main">
+                          <div>
+                            <span className="muted">SMPS {index + 1}</span>
+                            <strong>{percent.toFixed(0)}%</strong>
+                          </div>
+                          <div className="belt-header-info">
+                            <div className={`badge ${status.toLowerCase()}`}>{status}</div>
+                            <div className="muted">모듈 {lightCount}개</div>
+                            <div className="smps-price">40,000원</div>
+                          </div>
                         </div>
-                        <div className={`badge ${status.toLowerCase()}`}>{status}</div>
-                        <div className="muted">모듈 {lightCount}개</div>
                         <span className="chevron">{expanded ? '−' : '+'}</span>
                       </button>
                       {belts.length > 1 && (

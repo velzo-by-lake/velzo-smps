@@ -154,6 +154,12 @@
   text-shadow: 0 1px 3px rgba(76, 175, 80, 0.3);
 }
 
+.smps-info {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
 .time-remaining::before {
   content: '⏰';
   font-size: 0.9rem;
