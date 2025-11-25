@@ -764,8 +764,28 @@ body {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   width: 100%;
+}
+
+.belt-explosion {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.belt-explosion svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .belt-stage-container {
