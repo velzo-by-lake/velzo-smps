@@ -1,0 +1,183 @@
+<!--
+  아임웹 텔레그램 알림 연동 코드
+  
+  사용 방법:
+  1. 아래 코드에서 YOUR_BOT_TOKEN과 YOUR_CHAT_ID를 실제 값으로 교체하세요.
+  2. 아임웹 관리자 페이지에서 고급 설정 → HTML/CSS/JS 섹션에 이 코드를 추가하세요.
+  3. 폼 제출 시 텔레그램으로 알림이 전송됩니다.
+-->
+
+<script>
+(function() {
+  'use strict';
+  
+  // ============================================
+  // 설정: 여기에 봇 토큰과 Chat ID를 입력하세요
+  // ============================================
+  const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN'; // 예: '1234567890:ABCdefGHIjklMNOpqrsTUVwxyz'
+  const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';     // 예: '123456789'
+  
+  // ============================================
+  // 텔레그램 메시지 전송 함수
+  // ============================================
+  async function sendTelegramNotification(message) {
+    if (TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN' || TELEGRAM_CHAT_ID === 'YOUR_CHAT_ID') {
+      console.warn('텔레그램 봇 설정이 필요합니다.');
+      return false;
+    }
+    
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: 'HTML',
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('텔레그램 알림 전송 실패');
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('텔레그램 알림 전송 실패:', error);
+      return false;
+    }
+  }
+  
+  // ============================================
+  // 폼 데이터 수집 함수
+  // ============================================
+  function collectFormData(form) {
+    const formData = new FormData(form);
+    const data = {};
+    
+    // 모든 입력 필드 수집
+    form.querySelectorAll('input, textarea, select').forEach((field) => {
+      const name = field.name || field.id;
+      const value = field.value;
+      
+      if (name && value) {
+        // 라디오 버튼과 체크박스 처리
+        if (field.type === 'radio' || field.type === 'checkbox') {
+          if (field.checked) {
+            data[name] = data[name] ? `${data[name]}, ${value}` : value;
+          }
+        } else {
+          data[name] = value;
+        }
+      }
+    });
+    
+    return data;
+  }
+  
+  // ============================================
+  // 메시지 포맷팅 함수
+  // ============================================
+  function formatMessage(formData, formType = '문의') {
+    let message = `📧 <b>아임웹 ${formType}</b>\n\n`;
+    
+    // 필드명을 한글로 매핑 (필요에 따라 수정)
+    const fieldLabels = {
+      name: '이름',
+      company: '회사명',
+      phone: '전화번호',
+      email: '이메일',
+      message: '문의내용',
+      inquiry: '문의내용',
+      subject: '제목',
+      // 추가 필드명 매핑...
+    };
+    
+    for (const [key, value] of Object.entries(formData)) {
+      if (value) {
+        const label = fieldLabels[key] || key;
+        message += `<b>${label}:</b> ${value}\n`;
+      }
+    }
+    
+    message += `\n🕐 문의 시간: ${new Date().toLocaleString('ko-KR')}`;
+    message += `\n🌐 출처: 아임웹 메인 홈페이지`;
+    
+    return message;
+  }
+  
+  // ============================================
+  // 폼 제출 이벤트 리스너
+  // ============================================
+  function setupFormListener() {
+    // 페이지의 모든 폼에 리스너 추가
+    const forms = document.querySelectorAll('form');
+    
+    forms.forEach((form) => {
+      form.addEventListener('submit', async function(e) {
+        // 기본 제출 동작은 유지 (텔레그램 전송 실패해도 폼은 제출됨)
+        
+        // 폼 데이터 수집
+        const formData = collectFormData(form);
+        
+        // 메시지 생성
+        const message = formatMessage(formData);
+        
+        // 텔레그램 알림 전송 (비동기, 에러가 나도 폼 제출은 계속됨)
+        sendTelegramNotification(message).catch((error) => {
+          console.error('텔레그램 알림 전송 실패:', error);
+        });
+      });
+    });
+  }
+  
+  // ============================================
+  // 페이지 로드 시 초기화
+  // ============================================
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFormListener);
+  } else {
+    setupFormListener();
+  }
+  
+  // 아임웹의 동적 폼 로드를 위한 MutationObserver
+  const observer = new MutationObserver(() => {
+    setupFormListener();
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+})();
+</script>
+
+<!--
+  추가 설정:
+  
+  1. 특정 폼만 선택하려면:
+     const forms = document.querySelectorAll('form#contact-form');
+     또는
+     const forms = document.querySelectorAll('.inquiry-form');
+  
+  2. 폼 제출 전에 확인하려면:
+     form.addEventListener('submit', async function(e) {
+       e.preventDefault(); // 기본 제출 막기
+       
+       // 텔레그램 전송
+       const success = await sendTelegramNotification(message);
+       
+       if (success) {
+         form.submit(); // 성공 시 폼 제출
+       } else {
+         alert('알림 전송에 실패했습니다. 다시 시도해주세요.');
+       }
+     });
+  
+  3. 이미지나 파일이 포함된 경우:
+     - 텔레그램 sendPhoto API를 사용하여 이미지를 전송할 수 있습니다.
+     - 자세한 내용은 TELEGRAM_SETUP.md를 참고하세요.
+-->
+
