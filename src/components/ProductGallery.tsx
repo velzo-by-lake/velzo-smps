@@ -25,11 +25,16 @@ function ProductGallery() {
       return
     }
 
-    const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN'
-    const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || 'YOUR_CHAT_ID'
+    const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN
+    const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID
 
-    if (TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN' || TELEGRAM_CHAT_ID === 'YOUR_CHAT_ID') {
-      alert('텔레그램 봇 설정이 필요합니다.')
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || TELEGRAM_BOT_TOKEN.trim() === '' || TELEGRAM_CHAT_ID.trim() === '') {
+      console.error('텔레그램 봇 설정이 필요합니다.', {
+        hasToken: !!TELEGRAM_BOT_TOKEN,
+        hasChatId: !!TELEGRAM_CHAT_ID,
+        envKeys: Object.keys(import.meta.env).filter((key) => key.includes('TELEGRAM')),
+      })
+      alert('텔레그램 봇 설정이 필요합니다.\n\nNetlify 환경 변수를 확인해주세요:\n- VITE_TELEGRAM_BOT_TOKEN\n- VITE_TELEGRAM_CHAT_ID\n\n환경 변수 설정 후 재배포가 필요합니다.')
       return
     }
 

@@ -108,13 +108,19 @@ function PriceSummary() {
   }
 
   const sendTelegramNotification = async (action: string, phone?: string) => {
-    // 텔레그램 봇 설정 (환경 변수 또는 설정 파일에서 가져오기)
-    const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN'
-    const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || 'YOUR_CHAT_ID'
+    // 텔레그램 봇 설정 (환경 변수에서 가져오기)
+    const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN
+    const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID
 
     // 봇 토큰이 설정되지 않았으면 알림 전송 건너뛰기
-    if (TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN' || TELEGRAM_CHAT_ID === 'YOUR_CHAT_ID') {
-      console.warn('텔레그램 봇 설정이 필요합니다.')
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || TELEGRAM_BOT_TOKEN.trim() === '' || TELEGRAM_CHAT_ID.trim() === '') {
+      console.warn('텔레그램 봇 설정이 필요합니다.', {
+        hasToken: !!TELEGRAM_BOT_TOKEN,
+        hasChatId: !!TELEGRAM_CHAT_ID,
+        tokenLength: TELEGRAM_BOT_TOKEN?.length || 0,
+        chatIdLength: TELEGRAM_CHAT_ID?.length || 0,
+        envKeys: Object.keys(import.meta.env).filter((key) => key.includes('TELEGRAM')),
+      })
       return
     }
 
