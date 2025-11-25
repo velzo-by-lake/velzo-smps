@@ -115,28 +115,37 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
       const product = products.find((item) => item.id === productId)
       if (!product) return state
       const belts = state.belts.length ? state.belts : [createBelt()]
+      // 마지막 벨트에 추가 (또는 첫 번째 벨트가 없으면 생성)
+      const targetBeltIndex = belts.length - 1
+      const targetBelt = belts[targetBeltIndex]
+      
       // 왼쪽 끝부터 배치 (padding + 제품 너비의 절반)
       const DEFAULT_CANVAS_WIDTH = 760
       const padding = 32
-      const beltLength = belts[0]?.length || 5
+      const beltLength = targetBelt?.length || 5
       const beltCentimeter = beltLength * 100
       const usableWidth = DEFAULT_CANVAS_WIDTH - padding * 2
       const productWidthPx = Math.max((product.width / beltCentimeter) * usableWidth, 36)
       const positionX = padding + productWidthPx / 2
+      
+      const newLight: LightItem = {
+        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 10),
+        productId: product.id,
+        type: product.name,
+        watt: product.watt,
+        width: product.width,
+        image: product.image,
+        simImage: product.simImage,
+        positionX,
+      }
+      
       const updatedBelts = belts.map((belt, index) => {
-        if (index !== 0) return belt
-        const newLight: LightItem = {
-          id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 10),
-          productId: product.id,
-          type: product.name,
-          watt: product.watt,
-          width: product.width,
-          image: product.image,
-          simImage: product.simImage,
-          positionX,
+        if (index === targetBeltIndex) {
+          return { ...belt, lights: settleLights([...belt.lights, newLight]) }
         }
-        return { ...belt, lights: settleLights([...belt.lights, newLight]) }
+        return belt
       })
+      
       return {
         belts: updatedBelts,
         modalProductId: null,

@@ -19,7 +19,7 @@ function Header({ totalWatt, belts }: HeaderProps) {
               <span className="link-text">홈페이지</span>
             </a>
             <a
-              href="https://place.naver.com/..."
+              href="https://naver.me/FOZMZ1F6"
               target="_blank"
               rel="noopener noreferrer"
               className="banner-link naver"
@@ -28,7 +28,7 @@ function Header({ totalWatt, belts }: HeaderProps) {
               <span className="link-text">네이버 플레이스</span>
             </a>
             <a
-              href="https://www.instagram.com/..."
+              href="https://www.instagram.com/velzo_light/"
               target="_blank"
               rel="noopener noreferrer"
               className="banner-link instagram"
@@ -37,13 +37,22 @@ function Header({ totalWatt, belts }: HeaderProps) {
               <span className="link-text">인스타그램</span>
             </a>
             <a
-              href="https://pf.kakao.com/..."
+              href="https://pf.kakao.com/_ZIpxiG"
               target="_blank"
               rel="noopener noreferrer"
               className="banner-link kakao"
             >
               <span className="link-icon">💬</span>
               <span className="link-text">카카오톡 문의</span>
+            </a>
+            <a
+              href="https://blog.naver.com/velzo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="banner-link blog"
+            >
+              <span className="link-icon">📝</span>
+              <span className="link-text">네이버 블로그</span>
             </a>
           </div>
           <a href="tel:010-7356-6036" className="phone-button">

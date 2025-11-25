@@ -144,6 +144,18 @@ body {
   color: #3c1e1e;
 }
 
+.banner-link.blog {
+  background: rgba(3, 199, 90, 0.15);
+  border-color: rgba(3, 199, 90, 0.4);
+  color: #03c75a;
+}
+
+.banner-link.blog:hover {
+  background: rgba(3, 199, 90, 0.25);
+  border-color: #03c75a;
+  box-shadow: 0 8px 24px rgba(3, 199, 90, 0.3);
+}
+
 /* 전화 버튼 */
 .phone-button {
   display: flex;

@@ -1,4 +1,5 @@
 import { useMemo, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useSimulatorStore } from '../store/useSimulatorStore'
 import { products } from '../data/products'
 import './PriceSummary.css'
@@ -7,6 +8,8 @@ function PriceSummary() {
   const belts = useSimulatorStore((state) => state.belts)
   const [firstLightTime, setFirstLightTime] = useState<number | null>(null)
   const [currentTime, setCurrentTime] = useState(Date.now())
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [purchasePhoneNumber, setPurchasePhoneNumber] = useState('')
 
   // 첫 조명 배치 시간 추적
   useEffect(() => {
@@ -104,7 +107,7 @@ function PriceSummary() {
     window.open('https://forms.gle/...', '_blank')
   }
 
-  const sendTelegramNotification = async (action: string) => {
+  const sendTelegramNotification = async (action: string, phone?: string) => {
     // 텔레그램 봇 설정 (환경 변수 또는 설정 파일에서 가져오기)
     const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN'
     const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || 'YOUR_CHAT_ID'
@@ -129,9 +132,11 @@ function PriceSummary() {
       ? `\n할인 적용: ${discountInfo.discountRate}% (${discountInfo.discountAmount.toLocaleString()}원 할인)\n최종 금액: ${discountInfo.finalPrice.toLocaleString()}원`
       : ''
 
+    const phoneText = phone ? `\n📞 <b>연락처:</b> ${phone}` : ''
+
     const message = `🛒 <b>VELZO 견적 문의</b>
 
-${action === 'inquiry' ? '📞 <b>문의 요청</b>' : '💰 <b>구매 요청</b>'}
+${action === 'inquiry' ? '📞 <b>문의 요청</b>' : '💰 <b>구매 요청</b>'}${phoneText}
 
 ━━━━━━━━━━━━━━━━━━
 총 견적 금액: ${totalPrice.toLocaleString()}원${discountText}
@@ -178,17 +183,29 @@ ${productList || '없음'}
     }
   }
 
-  const handlePurchase = async () => {
-    // 구매하기 - 텔레그램 알림 + 사용자에게 연락 옵션 제공
-    await sendTelegramNotification('purchase')
-    
-    const userChoice = window.confirm(
-      '구매 문의가 접수되었습니다!\n\n곧 연락드리겠습니다.\n\n지금 바로 전화 문의하시겠습니까?'
-    )
-    
-    if (userChoice) {
-      window.location.href = 'tel:010-7356-6036'
+  const handlePurchase = () => {
+    // 구매하기 모달 표시
+    setShowPurchaseModal(true)
+  }
+
+  const handleContactSubmit = async () => {
+    if (!purchasePhoneNumber.trim()) {
+      alert('연락받을 전화번호를 입력해주세요.')
+      return
     }
+
+    await sendTelegramNotification('purchase', purchasePhoneNumber)
+    alert('구매 문의가 접수되었습니다! 곧 연락드리겠습니다.')
+    setShowPurchaseModal(false)
+    setPurchasePhoneNumber('')
+  }
+
+  const handleKakaoInquiry = () => {
+    window.open('https://pf.kakao.com/...', '_blank')
+  }
+
+  const handleCallNow = () => {
+    window.location.href = 'tel:010-7356-6036'
   }
 
   return (
@@ -248,6 +265,83 @@ ${productList || '없음'}
           )}
         </div>
       </div>
+
+      {showPurchaseModal &&
+        createPortal(
+          <div className="purchase-modal-overlay" onClick={() => setShowPurchaseModal(false)}>
+            <div className="purchase-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="purchase-modal-close"
+                onClick={() => setShowPurchaseModal(false)}
+              >
+                ×
+              </button>
+              <h3>구매 문의하기</h3>
+              <p className="purchase-modal-description">
+                원하시는 방법을 선택해주세요. 빠르게 연락드리겠습니다.
+              </p>
+
+              <div className="purchase-options">
+                <div className="purchase-option-card">
+                  <div className="option-header">
+                    <span className="option-icon">📝</span>
+                    <h4>연락처 남기기</h4>
+                  </div>
+                  <p className="option-description">전화번호를 남기시면 빠르게 연락드리겠습니다.</p>
+                  <div className="phone-input-section">
+                    <input
+                      type="tel"
+                      className="purchase-phone-input"
+                      placeholder="010-1234-5678"
+                      value={purchasePhoneNumber}
+                      onChange={(e) => setPurchasePhoneNumber(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="contact-submit-btn"
+                      onClick={handleContactSubmit}
+                      disabled={!purchasePhoneNumber.trim()}
+                    >
+                      문의 접수
+                    </button>
+                  </div>
+                </div>
+
+                <div className="purchase-option-card">
+                  <div className="option-header">
+                    <span className="option-icon">💬</span>
+                    <h4>카카오톡 문의</h4>
+                  </div>
+                  <p className="option-description">카카오톡으로 바로 문의하실 수 있습니다.</p>
+                  <button
+                    type="button"
+                    className="kakao-inquiry-btn"
+                    onClick={handleKakaoInquiry}
+                  >
+                    카카오톡으로 문의하기
+                  </button>
+                </div>
+
+                <div className="purchase-option-card">
+                  <div className="option-header">
+                    <span className="option-icon">📞</span>
+                    <h4>전화 문의</h4>
+                  </div>
+                  <p className="option-description">지금 바로 전화로 문의하실 수 있습니다.</p>
+                  <button
+                    type="button"
+                    className="call-now-purchase-btn"
+                    onClick={handleCallNow}
+                  >
+                    📞 010-7356-6036
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   )
 }
