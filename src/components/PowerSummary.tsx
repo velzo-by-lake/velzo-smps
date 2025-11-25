@@ -17,7 +17,7 @@ type PowerSummaryProps = {
   stage: Stage | null
 }
 
-function PowerSummary({ belt, stage }: PowerSummaryProps) {
+function PowerSummary({ belt }: PowerSummaryProps) {
   const totalWatt = getBeltTotalWatt(belt)
   const recommendedPercent = getUsagePercent(totalWatt, RECOMMENDED_LIMIT)
   const absolutePercent = getUsagePercent(totalWatt, ABSOLUTE_LIMIT)

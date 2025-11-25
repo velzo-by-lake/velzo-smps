@@ -2,8 +2,7 @@ import { useMemo, useState } from 'react'
 import { useSimulatorStore } from '../store/useSimulatorStore'
 import { products } from '../data/products'
 import { accessories } from '../data/accessories'
-import { productSets, type ProductSet } from '../data/sets'
-import { getBeltTotalWatt } from '../utils/watt'
+import { productSets } from '../data/sets'
 import './QuotePage.css'
 
 function QuotePage() {
