@@ -65,7 +65,19 @@ function App() {
               <div className="canvas-head">
                 <div>
                   <p className="panel-label">BELT CANVAS</p>
-                  <h2>벨트를 추가하고 모듈을 배치하세요.</h2>
+                  <h2>벨트를 추가하고 모듈을 배치하세요</h2>
+                  {belts.length === 0 && (
+                    <p className="canvas-hint">
+                      💡 <strong>시작하기:</strong> SMPS를 추가하고 원하는 조명을 선택해 벨트에 배치하세요. 
+                      실시간으로 전력 소비량과 견적을 확인할 수 있습니다.
+                    </p>
+                  )}
+                  {belts.length > 0 && belts.every((belt) => belt.lights.length === 0) && (
+                    <p className="canvas-hint">
+                      ✨ <strong>다음 단계:</strong> 카탈로그에서 조명을 선택하여 벨트에 추가하세요. 
+                      여러 조명을 조합하여 나만의 조명 디자인을 만들어보세요!
+                    </p>
+                  )}
                 </div>
                 <button type="button" className="primary-btn" onClick={addBelt}>
                   + SMPS 추가

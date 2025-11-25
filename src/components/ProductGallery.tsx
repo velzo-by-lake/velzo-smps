@@ -90,7 +90,19 @@ ${inquiryMessage || '사용자가 갤러리에서 문의를 요청했습니다.'
         <div className="panel-headline">
           <p className="panel-label">VELZO GALLERY</p>
           <h2>시그니처 모듈 프리뷰</h2>
-          <p className="muted">원하는 이미지나 사진을 선택하여 문의하세요</p>
+          <p className="muted">각 조명의 실제 설치 사진을 확인하고, 원하는 이미지를 선택하여 문의하세요</p>
+          <div className="gallery-benefits">
+            <p className="gallery-benefits-title">
+              <span>✨</span>
+              <span>VELZO 조명의 특징</span>
+            </p>
+            <ul className="gallery-benefits-list">
+              <li>모듈형 설계로 자유로운 배치 가능</li>
+              <li>IronGray 벨트와 조화로운 디자인</li>
+              <li>4000K 아이보리빛 자연스러운 조명</li>
+              <li>48V 안전 전압 시스템</li>
+            </ul>
+          </div>
         </div>
         <div className="gallery-grid">
           {products.map((product) => (

@@ -243,7 +243,12 @@ ${productList || '없음'}
                   )}
                 </>
               ) : (
-                <span className="price-empty">조명을 배치해주세요</span>
+                <div className="price-empty-container">
+                  <span className="price-empty">조명을 배치해주세요</span>
+                  <p className="empty-hint">
+                    💡 카탈로그에서 조명을 선택하여 벨트에 추가하면 견적을 확인할 수 있습니다
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -255,8 +260,18 @@ ${productList || '없음'}
               )}
               {remainingTime && (
                 <span className="time-remaining">
-                  ⏰ {remainingTime.minutes}분 {remainingTime.seconds}초 남음
+                  {remainingTime.minutes}분 {remainingTime.seconds}초 남음
                 </span>
+              )}
+              {/* 10% 할인 중일 때 100만원 이상 구매 시 30% 할인 안내 */}
+              {discountInfo?.type === 'time' && totalPrice < 1000000 && (
+                <div className="discount-upgrade-hint">
+                  <span className="hint-icon">✨</span>
+                  <span className="hint-text">
+                    <strong>{(1000000 - totalPrice).toLocaleString()}원</strong> 더 추가하면{' '}
+                    <strong className="highlight">30% 특별할인</strong> 적용!
+                  </span>
+                </div>
               )}
             </div>
           )}
@@ -271,8 +286,26 @@ ${productList || '없음'}
                 💬 문의하기
               </button>
               <button type="button" className="purchase-btn" onClick={handlePurchase}>
-                🛒 바로 구매하기
+                {discountInfo ? (
+                  <>
+                    🛒 <span>지금 구매하면</span>{' '}
+                    <strong>{discountInfo.discountAmount.toLocaleString()}원 할인!</strong>
+                  </>
+                ) : (
+                  <>🛒 바로 구매하기</>
+                )}
               </button>
+              {discountInfo?.type === 'time' && totalPrice < 1000000 && (
+                <div className="purchase-encouragement">
+                  <p className="encouragement-text">
+                    <strong>{(1000000 - totalPrice).toLocaleString()}원</strong>만 더 추가하면{' '}
+                    <strong className="highlight">30% 특별할인</strong>이 적용됩니다!
+                  </p>
+                  <p className="encouragement-subtext">
+                    더 많은 조명을 추가하여 더 큰 할인을 받아보세요 ✨
+                  </p>
+                </div>
+              )}
             </>
           )}
         </div>

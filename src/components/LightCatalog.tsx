@@ -33,8 +33,8 @@ function LightCatalog() {
     <aside className="catalog">
       <div className="panel-headline">
         <p className="panel-label">VELZO MODULES</p>
-        <h2>카탈로그</h2>
-        <p className="muted">드래그해서 벨트 중앙선에 스냅됩니다.</p>
+        <h2>조명 카탈로그</h2>
+        <p className="muted">탭하여 벨트에 추가하세요</p>
       </div>
       <div className="catalog-grid">
         {products.map((product) => (
@@ -50,13 +50,22 @@ function LightCatalog() {
             <img src={product.image} alt={product.name} />
             <div className="catalog-info">
               <strong>{product.name}</strong>
-              <span>
+              <span className="catalog-spec">
                 {product.watt}W · {product.size}
               </span>
               <span className="price">{product.price.toLocaleString()}원</span>
+              {product.description && (
+                <span className="catalog-desc">{product.description}</span>
+              )}
             </div>
           </button>
         ))}
+      </div>
+      <div className="catalog-tip">
+        <p className="tip-icon">💡</p>
+        <p className="tip-text">
+          <strong>팁:</strong> 여러 조명을 추가하여 공간을 더 밝고 아름답게 만들어보세요!
+        </p>
       </div>
     </aside>
   )
