@@ -52,14 +52,14 @@ body {
    상단 배너 - 모바일 최적화
    ============================================ */
 .top-banner {
-  background: rgba(22, 22, 29, 0.98);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 12px 0;
+  background: rgba(22, 22, 29, 0.99);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  padding: 14px 0;
   position: sticky;
   top: 0;
   z-index: 200;
   backdrop-filter: blur(20px);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
 }
 
 .banner-content {
@@ -91,24 +91,26 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
   text-decoration: none;
   font-size: 0;
-  min-width: 44px;
-  min-height: 44px;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.05);
+  min-width: 48px;
+  min-height: 48px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text);
   transition: all 0.2s ease;
   flex-shrink: 0;
   -webkit-tap-highlight-color: rgba(246, 223, 180, 0.2);
   touch-action: manipulation;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .banner-link .link-icon {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 1;
+  filter: brightness(1.2);
 }
 
 .banner-link .link-text {
@@ -121,116 +123,130 @@ body {
 }
 
 .banner-link.naver {
-  background: rgba(3, 199, 90, 0.1);
-  border-color: rgba(3, 199, 90, 0.3);
+  background: rgba(3, 199, 90, 0.2);
+  border-color: rgba(3, 199, 90, 0.5);
+  box-shadow: 0 2px 8px rgba(3, 199, 90, 0.2);
 }
 
 .banner-link.naver:hover {
-  background: rgba(3, 199, 90, 0.2);
+  background: rgba(3, 199, 90, 0.3);
+  border-color: #03c75a;
 }
 
 .banner-link.instagram {
-  background: linear-gradient(135deg, rgba(225, 48, 108, 0.15), rgba(245, 96, 64, 0.15));
-  border-color: rgba(225, 48, 108, 0.3);
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.25), rgba(245, 96, 64, 0.25));
+  border-color: rgba(225, 48, 108, 0.5);
+  box-shadow: 0 2px 8px rgba(225, 48, 108, 0.2);
 }
 
 .banner-link.instagram:hover {
-  background: linear-gradient(135deg, rgba(225, 48, 108, 0.25), rgba(245, 96, 64, 0.25));
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.35), rgba(245, 96, 64, 0.35));
+  border-color: #e1306c;
 }
 
 .banner-link.kakao {
-  background: rgba(255, 232, 18, 0.15);
-  border-color: rgba(255, 232, 18, 0.3);
+  background: rgba(255, 232, 18, 0.25);
+  border-color: rgba(255, 232, 18, 0.5);
+  box-shadow: 0 2px 8px rgba(255, 232, 18, 0.2);
 }
 
 .banner-link.kakao:hover {
-  background: rgba(255, 232, 18, 0.25);
+  background: rgba(255, 232, 18, 0.35);
+  border-color: #fee500;
   color: #3c1e1e;
 }
 
 .banner-link.blog {
-  background: rgba(3, 199, 90, 0.1);
-  border-color: rgba(3, 199, 90, 0.3);
+  background: rgba(3, 199, 90, 0.2);
+  border-color: rgba(3, 199, 90, 0.5);
+  box-shadow: 0 2px 8px rgba(3, 199, 90, 0.2);
 }
 
 .banner-link.blog:hover {
-  background: rgba(3, 199, 90, 0.2);
+  background: rgba(3, 199, 90, 0.3);
+  border-color: #03c75a;
 }
 
 .phone-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 16px;
-  border-radius: 10px;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 12px;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 0.85rem;
+  font-weight: 800;
+  font-size: 0.95rem;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 48px;
   background: linear-gradient(135deg, #4CAF50, #45a049);
   color: white;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4), 0 0 0 0 rgba(76, 175, 80, 0.2);
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
 .phone-button:active {
-  transform: scale(0.98);
-  box-shadow: 0 1px 4px rgba(76, 175, 80, 0.3);
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
 }
 
 .phone-icon {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .phone-number {
-  letter-spacing: 0.3px;
-  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* ============================================
    헤더 - 카드 기반 모바일 스타일
    ============================================ */
 .sim-header {
-  background: var(--panel);
+  background: rgba(22, 22, 29, 0.95);
   border-radius: 0;
   border: none;
-  border-bottom: 1px solid var(--border);
-  padding: 20px 16px;
+  border-bottom: 2px solid var(--border);
+  padding: 24px 16px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: none;
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .eyebrow {
-  margin: 0 0 6px;
-  letter-spacing: 0.2em;
-  font-size: 0.7rem;
-  color: var(--muted);
+  margin: 0 0 8px;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  color: var(--accent);
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .sim-header h1 {
-  margin: 0 0 8px;
-  font-size: 1.5rem;
-  font-weight: 700;
+  margin: 0 0 12px;
+  font-size: 1.7rem;
+  font-weight: 800;
   line-height: 1.3;
+  color: var(--text);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .lead {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 500;
 }
 
 .header-metrics {
@@ -241,27 +257,30 @@ body {
 }
 
 .header-metrics > div {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .metric-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+  letter-spacing: 0.12em;
+  font-weight: 700;
 }
 
 .header-metrics strong {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 800;
   display: block;
+  color: var(--accent);
+  text-shadow: 0 2px 4px rgba(246, 223, 180, 0.2);
 }
 
 /* ============================================
@@ -774,22 +793,26 @@ body {
 }
 
 .modal-info h3 {
-  margin: 0 0 8px;
-  font-size: 1.4rem;
-  font-weight: 700;
+  margin: 0 0 10px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .modal-spec {
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  margin: 0 0 14px;
+  font-weight: 600;
 }
 
 .modal-description {
-  color: var(--text);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0 0 20px;
+  font-weight: 500;
 }
 
 .modal-gallery {
