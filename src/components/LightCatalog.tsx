@@ -4,7 +4,7 @@ import { useSimulatorStore } from '../store/useSimulatorStore'
 
 function LightCatalog() {
   const setActiveProduct = useSimulatorStore((state) => state.setActiveProduct)
-  const openModal = useSimulatorStore((state) => state.openProductModal)
+  const quickAdd = useSimulatorStore((state) => state.quickAddProduct)
   const isDraggingRef = useRef(false)
 
   const handleDragStart = (event: DragEvent<HTMLButtonElement>, productId: string) => {
@@ -23,11 +23,11 @@ function LightCatalog() {
     setActiveProduct(null)
   }
 
-  const handleCardClick = (event: MouseEvent<HTMLButtonElement>, productId: string) => {
+  const handleQuickInsert = (event: MouseEvent<HTMLButtonElement>, productId: string) => {
     if (isDraggingRef.current) return
     event.preventDefault()
-    // 카탈로그 카드 클릭 시 모달 열기 (갤러리 이미지 보기)
-    openModal(productId)
+    // 카탈로그 카드 클릭 시 바로 벨트에 추가
+    quickAdd(productId)
   }
 
   return (
@@ -46,7 +46,7 @@ function LightCatalog() {
             onDragStart={(event) => handleDragStart(event, product.id)}
             onDragEnd={handleDragEnd}
             className="catalog-card"
-            onClick={(event) => handleCardClick(event, product.id)}
+            onClick={(event) => handleQuickInsert(event, product.id)}
           >
             <img src={product.image} alt={product.name} />
             <div className="catalog-info">
