@@ -845,7 +845,28 @@ body {
   width: 100%;
   max-width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.belt-stage-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.belt-stage-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.belt-stage-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.belt-stage-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .belt-empty-hint {
@@ -863,17 +884,19 @@ body {
 }
 
 .konva-stage {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
 }
 
 .konva-stage .konvajs-content {
+  width: 100% !important;
   max-width: 100% !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 .konva-stage canvas {
+  width: 100% !important;
   max-width: 100% !important;
   height: auto !important;
 }

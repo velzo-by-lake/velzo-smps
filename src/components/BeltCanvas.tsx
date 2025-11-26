@@ -54,9 +54,10 @@ function LightSprite({
   const blurTween = useRef<gsap.core.Tween>()
 
   const ratio = naturalWidth > 0 ? naturalHeight / naturalWidth : 1
-  const widthPx = Math.max((light.width / beltCentimeter) * usableWidth, 36)
+  // 조명 크기를 더 크게 표시 (최소 50px, 스케일 1.5배)
+  const widthPx = Math.max((light.width / beltCentimeter) * usableWidth * 1.5, 50)
   const height = widthPx * ratio
-  const baseY = trackHeight / 2 - height - 8
+  const baseY = trackHeight / 2 - height - 6
 
   useEffect(() => {
     if (element && imageRef.current) {
@@ -171,9 +172,10 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0]
       const containerWidth = entry.contentRect.width
-      // 최대 너비 제한 및 높이 최소화
+      // 컨테이너 너비에 맞춤 (최대 너비 제한)
       const width = Math.min(containerWidth, MAX_WIDTH)
-      const height = Math.max(120, Math.min(150, width * 0.15))
+      // 높이를 조명이 잘 보이도록 조정
+      const height = Math.max(140, Math.min(160, width * 0.2))
       setCanvasSize({ width, height })
     })
     observer.observe(containerRef.current)
@@ -181,10 +183,11 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
   }, [])
   const trackWidth = canvasSize.width
   const trackHeight = canvasSize.height
-  const usableWidth = Math.max(80, trackWidth - padding * 2)
+  const usableWidth = Math.max(100, trackWidth - padding * 2)
   const beltCentimeter = Math.max(100, belt.length * 100)
+  // 조명 크기를 더 크게 표시 (최소 50px, 스케일 1.5배)
   const projectWidth = (physicalWidth: number) =>
-    Math.max((physicalWidth / beltCentimeter) * usableWidth, 36)
+    Math.max((physicalWidth / beltCentimeter) * usableWidth * 1.5, 50)
 
   useEffect(() => {
     if (!explosionRef.current) return undefined
@@ -274,13 +277,13 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
           </div>
         )}
         <Stage
-          width={Math.min(trackWidth, MAX_WIDTH)}
+          width={trackWidth}
           height={trackHeight}
           ref={stageRef}
           className="konva-stage"
           onMouseUp={handlePointerUp}
           onTouchEnd={handlePointerUp}
-          style={{ cursor: activeProduct ? 'copy' : 'default', maxWidth: '100%' }}
+          style={{ cursor: activeProduct ? 'copy' : 'default', width: '100%', maxWidth: '100%' }}
         >
           <Layer>
             <Rect
