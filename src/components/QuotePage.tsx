@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import { useSimulatorStore } from '../store/useSimulatorStore'
 import { products } from '../data/products'
 import { accessories } from '../data/accessories'
@@ -28,6 +29,7 @@ function QuotePage() {
   const [accessoryQuantities, setAccessoryQuantities] = useState<Record<string, number>>({})
   const [productQuantities, setProductQuantities] = useState<Record<string, number>>({})
   const [smpsCount, setSmpsCount] = useState(belts.length)
+  const quotePageRef = useRef<HTMLDivElement>(null)
 
   const SMPS_PRICE = 40000
 
@@ -135,175 +137,83 @@ function QuotePage() {
     setSmpsCount((prev) => Math.max(0, prev + delta))
   }
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF('p', 'mm', 'a4')
-    const pageWidth = doc.internal.pageSize.getWidth()
-    const pageHeight = doc.internal.pageSize.getHeight()
-    let yPos = 20
+  const handleExportPDF = async () => {
+    if (!quotePageRef.current) return
 
-    // 헤더
-    doc.setFontSize(20)
-    doc.setFont('helvetica', 'bold')
-    doc.text('견적서', pageWidth / 2, yPos, { align: 'center' })
-    yPos += 15
-
-    // 회사 정보
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`상호: ${COMPANY_INFO.name}`, 20, yPos)
-    doc.text(`대표자: ${COMPANY_INFO.ceo}`, 20, yPos + 5)
-    doc.text(`사업자번호: ${COMPANY_INFO.businessNumber}`, 20, yPos + 10)
-    doc.text(`사업장주소: ${COMPANY_INFO.address}`, 20, yPos + 15)
-    doc.text(`연락처: ${COMPANY_INFO.phone} / ${COMPANY_INFO.email}`, 20, yPos + 20)
-    doc.text(
-      `입금계좌: ${COMPANY_INFO.bank} ${COMPANY_INFO.account} 예금주: ${COMPANY_INFO.accountHolder}`,
-      20,
-      yPos + 25,
-    )
-    yPos += 35
-
-    // 견적일
-    doc.text(`견적일: ${new Date().toLocaleDateString('ko-KR')}`, pageWidth - 20, yPos - 30, { align: 'right' })
-
-    // 제품 목록 헤더
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('제품 목록', 20, yPos)
-    yPos += 10
-
-    // 테이블 헤더
-    doc.setFontSize(9)
-    doc.setFont('helvetica', 'bold')
-    doc.text('제품명', 20, yPos)
-    doc.text('수량', 100, yPos)
-    doc.text('온라인가격', 120, yPos)
-    doc.text('사업자가격', 150, yPos)
-    doc.text('사이즈', 175, yPos)
-    yPos += 8
-
-    doc.setLineWidth(0.5)
-    doc.line(20, yPos, pageWidth - 20, yPos)
-    yPos += 5
-
-    // 제품 목록 (수량이 있는 것만)
-    doc.setFont('helvetica', 'normal')
-    allProducts.forEach((item) => {
-      if (item.quantity > 0) {
-        if (yPos > pageHeight - 40) {
-          doc.addPage()
-          yPos = 20
+    try {
+      // PDF 생성 전: 수량이 0인 행과 세트 구성 섹션 숨기기, PDF 모드 클래스 추가
+      const allRows = quotePageRef.current.querySelectorAll('tr')
+      const setSection = quotePageRef.current.querySelector('.set-section')
+      
+      // PDF 모드 클래스 추가 (흰 배경 적용)
+      quotePageRef.current.classList.add('pdf-mode')
+      
+      // 수량이 0인 행 숨기기
+      allRows.forEach((row) => {
+        const qtyValue = row.querySelector('.qty-value')
+        if (qtyValue && parseInt(qtyValue.textContent || '0') === 0) {
+          ;(row as HTMLElement).style.display = 'none'
         }
-        const onlinePrice = item.product.price
-        const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
-        doc.text(item.product.name, 20, yPos)
-        doc.text(`${item.quantity}개`, 100, yPos)
-        doc.text(`${onlinePrice.toLocaleString()}원`, 120, yPos)
-        doc.text(`${businessPrice.toLocaleString()}원`, 150, yPos)
-        doc.text(item.product.size, 175, yPos)
-        yPos += 7
-      }
-    })
+      })
 
-    // SMPS
-    if (smpsCount > 0) {
-      if (yPos > pageHeight - 40) {
+      // 세트 구성 섹션 숨기기
+      if (setSection) {
+        ;(setSection as HTMLElement).style.display = 'none'
+      }
+
+      // 잠시 대기하여 스타일 적용 완료
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // HTML을 캔버스로 변환
+      const canvas = await html2canvas(quotePageRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        width: quotePageRef.current.scrollWidth,
+        height: quotePageRef.current.scrollHeight,
+      })
+
+      // 원래대로 복원
+      quotePageRef.current.classList.remove('pdf-mode')
+      allRows.forEach((row) => {
+        ;(row as HTMLElement).style.display = ''
+      })
+      if (setSection) {
+        ;(setSection as HTMLElement).style.display = ''
+      }
+
+      const imgData = canvas.toDataURL('image/png')
+      const imgWidth = 210 // A4 width in mm
+      const pageHeight = 297 // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+
+      const doc = new jsPDF('p', 'mm', 'a4')
+      let position = 0
+
+      // 첫 페이지 추가
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      // 여러 페이지가 필요한 경우
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight
         doc.addPage()
-        yPos = 20
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
       }
-      const onlinePrice = SMPS_PRICE
-      const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
-      doc.text('Velzo SMPS', 20, yPos)
-      doc.text(`${smpsCount}개`, 100, yPos)
-      doc.text(`${onlinePrice.toLocaleString()}원`, 120, yPos)
-      doc.text(`${businessPrice.toLocaleString()}원`, 150, yPos)
-      doc.text('145×45×30mm', 175, yPos)
-      yPos += 7
+
+      // PDF 저장
+      doc.save(`velzo-quote-${new Date().toISOString().split('T')[0]}.pdf`)
+    } catch (error) {
+      console.error('PDF 생성 중 오류 발생:', error)
+      alert('PDF 생성 중 오류가 발생했습니다. 다시 시도해주세요.')
     }
-
-    // 부수기제
-    Object.entries(accessoryQuantities).forEach(([id, qty]) => {
-      if (qty > 0) {
-        const accessory = accessoryMap[id]
-        if (accessory) {
-          if (yPos > pageHeight - 40) {
-            doc.addPage()
-            yPos = 20
-          }
-          const onlinePrice = accessory.price
-          const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
-          doc.text(accessory.name, 20, yPos)
-          doc.text(`${qty}개`, 100, yPos)
-          doc.text(`${onlinePrice.toLocaleString()}원`, 120, yPos)
-          doc.text(`${businessPrice.toLocaleString()}원`, 150, yPos)
-          doc.text(accessory.size, 175, yPos)
-          yPos += 7
-        }
-      }
-    })
-
-    // 선택된 세트
-    if (selectedSetData) {
-      if (yPos > pageHeight - 40) {
-        doc.addPage()
-        yPos = 20
-      }
-      doc.setFont('helvetica', 'bold')
-      doc.text(selectedSetData.name, 20, yPos)
-      doc.setFont('helvetica', 'normal')
-      doc.text('1세트', 100, yPos)
-      doc.text(`${selectedSetData.originalPrice.toLocaleString()}원`, 120, yPos)
-      doc.text(`${selectedSetData.discountPrice.toLocaleString()}원`, 150, yPos)
-      yPos += 7
-    }
-
-    // 합계
-    if (yPos > pageHeight - 50) {
-      doc.addPage()
-      yPos = 20
-    }
-    yPos += 5
-    doc.setLineWidth(0.5)
-    doc.line(20, yPos, pageWidth - 20, yPos)
-    yPos += 10
-
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(10)
-    doc.text('온라인 총액', 20, yPos)
-    doc.text(`${priceCalculation.onlineTotal.toLocaleString()}원`, pageWidth - 20, yPos, { align: 'right' })
-    yPos += 7
-
-    doc.setFont('helvetica', 'normal')
-    doc.text(`사업자 프로모션 ${BUSINESS_DISCOUNT_RATE * 100}% 할인`, 20, yPos)
-    doc.text(`-${priceCalculation.businessDiscount.toLocaleString()}원`, pageWidth - 20, yPos, { align: 'right' })
-    yPos += 7
-
-    doc.setFont('helvetica', 'bold')
-    doc.text('사업자 가격', 20, yPos)
-    doc.text(`${priceCalculation.businessPrice.toLocaleString()}원`, pageWidth - 20, yPos, { align: 'right' })
-    yPos += 7
-
-    doc.setFont('helvetica', 'normal')
-    doc.text(`부가세 (VAT ${VAT_RATE * 100}%)`, 20, yPos)
-    doc.text(`+${priceCalculation.vat.toLocaleString()}원`, pageWidth - 20, yPos, { align: 'right' })
-    yPos += 7
-
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(12)
-    doc.text('최종 견적 금액', 20, yPos)
-    doc.text(`${priceCalculation.finalPrice.toLocaleString()}원`, pageWidth - 20, yPos, { align: 'right' })
-
-    // 푸터
-    yPos = pageHeight - 20
-    doc.setFontSize(8)
-    doc.setFont('helvetica', 'normal')
-    doc.text('VELZO (벨조) · 벨트 색상: IronGray · LED 색온도: 아이보리빛 4000K', pageWidth / 2, yPos, { align: 'center' })
-
-    // PDF 저장
-    doc.save(`velzo-quote-${new Date().toISOString().split('T')[0]}.pdf`)
   }
 
   return (
-    <div className="quote-page">
+    <div className="quote-page" ref={quotePageRef}>
       <div className="quote-header">
         <div>
           <p className="eyebrow">VELZO</p>
@@ -361,6 +271,7 @@ function QuotePage() {
             <table className="quote-table">
               <thead>
                 <tr>
+                  <th style={{ width: '80px' }}>이미지</th>
                   <th>제품명</th>
                   <th>수량</th>
                   <th>온라인 가격</th>
@@ -385,6 +296,11 @@ function QuotePage() {
                       : '플라스틱'
                   return (
                     <tr key={item.product.id} className={item.quantity > 0 ? 'has-quantity' : ''}>
+                      <td>
+                        <div className="product-image-cell">
+                          <img src={item.product.simImage} alt={item.product.name} className="product-thumbnail" />
+                        </div>
+                      </td>
                       <td>{item.product.name}</td>
                       <td>
                         <div className="quantity-controls">
@@ -411,6 +327,11 @@ function QuotePage() {
                   )
                 })}
                 <tr className={smpsCount > 0 ? 'has-quantity' : ''}>
+                  <td>
+                    <div className="product-image-cell">
+                      <div className="product-placeholder">SMPS</div>
+                    </div>
+                  </td>
                   <td>Velzo SMPS</td>
                   <td>
                     <div className="quantity-controls">
@@ -440,6 +361,11 @@ function QuotePage() {
                   const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
                   return (
                     <tr key={accessory.id} className={qty > 0 ? 'has-quantity' : ''}>
+                      <td>
+                        <div className="product-image-cell">
+                          <div className="product-placeholder">부품</div>
+                        </div>
+                      </td>
                       <td>{accessory.name}</td>
                       <td>
                         <div className="quantity-controls">
@@ -471,7 +397,7 @@ function QuotePage() {
         </section>
 
         {/* 세트 구성 */}
-        <section className="quote-section">
+        <section className="quote-section set-section">
           <h2>세트 구성 (선택사항)</h2>
           <div className="set-grid">
             {productSets.map((set) => (

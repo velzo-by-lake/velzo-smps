@@ -4,6 +4,131 @@
   padding: 24px 16px;
   background: var(--bg);
   color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* PDF 생성 시에만 흰 배경 적용 */
+.quote-page.pdf-mode {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+.quote-page.pdf-mode .quote-header h1,
+.quote-page.pdf-mode .quote-section h2,
+.quote-page.pdf-mode .quote-header .eyebrow,
+.quote-page.pdf-mode .quote-header .subtitle {
+  color: #1a1a1a !important;
+  text-shadow: none !important;
+}
+
+.quote-page.pdf-mode .company-info-section,
+.quote-page.pdf-mode .quote-section,
+.quote-page.pdf-mode .quote-total {
+  background: #ffffff;
+  border-color: #e0e0e0;
+  color: #1a1a1a;
+}
+
+.quote-page.pdf-mode .info-label,
+.quote-page.pdf-mode .quote-header .eyebrow,
+.quote-page.pdf-mode .quote-header .subtitle {
+  color: #666666;
+}
+
+.quote-page.pdf-mode .info-value,
+.quote-page.pdf-mode .quote-table th,
+.quote-page.pdf-mode .quote-table td {
+  color: #1a1a1a;
+}
+
+.quote-page.pdf-mode .quote-table thead {
+  background: #f5f5f5;
+  border-bottom-color: #e0e0e0;
+}
+
+.quote-page.pdf-mode .quote-table th {
+  color: #333333 !important;
+}
+
+.quote-page.pdf-mode .quote-table tbody tr {
+  border-bottom-color: #e0e0e0;
+}
+
+.quote-page.pdf-mode .quote-table tbody tr.has-quantity {
+  background: #fff9f0;
+  border-left-color: #d4a574;
+}
+
+.quote-page.pdf-mode .quote-table tbody tr.has-quantity td {
+  color: #1a1a1a !important;
+}
+
+.quote-page.pdf-mode .product-thumbnail {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+}
+
+.quote-page.pdf-mode .product-placeholder {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+  color: #666666;
+}
+
+.quote-page.pdf-mode .price-cell {
+  color: #1a1a1a !important;
+}
+
+.quote-page.pdf-mode .price-cell.business {
+  color: #b8860b !important;
+  font-weight: 800;
+}
+
+.quote-page.pdf-mode .total-row {
+  border-bottom-color: #e0e0e0;
+}
+
+.quote-page.pdf-mode .total-row span,
+.quote-page.pdf-mode .total-row strong {
+  color: #1a1a1a !important;
+}
+
+.quote-page.pdf-mode .total-row.discount span,
+.quote-page.pdf-mode .total-row.discount strong {
+  color: #cc0000 !important;
+}
+
+.quote-page.pdf-mode .total-row.business span,
+.quote-page.pdf-mode .total-row.business strong {
+  color: #b8860b !important;
+}
+
+.quote-page.pdf-mode .total-row.vat span,
+.quote-page.pdf-mode .total-row.vat strong {
+  color: #006400 !important;
+}
+
+.quote-page.pdf-mode .total-row.final {
+  border-top-color: #d4a574;
+}
+
+.quote-page.pdf-mode .total-row.final span {
+  color: #1a1a1a !important;
+  text-shadow: none !important;
+}
+
+.quote-page.pdf-mode .total-row.final strong {
+  color: #b8860b !important;
+  text-shadow: none !important;
+}
+
+.quote-page.pdf-mode .quote-footer {
+  border-top-color: #e0e0e0;
+  color: #666666;
+}
+
+.quote-page.pdf-mode .quote-footer p,
+.quote-page.pdf-mode .quote-footer strong {
+  color: #666666 !important;
 }
 
 .quote-header {
@@ -29,6 +154,8 @@
   margin: 0;
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .quote-header .subtitle {
@@ -44,15 +171,16 @@
 
 /* 회사 정보 섹션 */
 .company-info-section {
-  background: var(--panel);
+  background: rgba(22, 22, 29, 0.95);
   border-radius: 12px;
-  padding: 20px;
-  border: 1px solid var(--border);
+  padding: 24px;
+  border: 2px solid rgba(246, 223, 180, 0.2);
   margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .company-info {
@@ -69,16 +197,16 @@
 }
 
 .info-label {
-  color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 600;
+  color: rgba(246, 223, 180, 0.8);
+  font-size: 0.9rem;
+  font-weight: 700;
   min-width: 80px;
 }
 
 .info-value {
   color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .quote-date {
@@ -98,16 +226,19 @@
 }
 
 .quote-section {
-  background: var(--panel);
+  background: rgba(22, 22, 29, 0.95);
   border-radius: 12px;
-  padding: 20px;
-  border: 1px solid var(--border);
+  padding: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .quote-section h2 {
-  margin: 0 0 16px;
-  font-size: 1.3rem;
-  font-weight: 700;
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .empty-state {
@@ -126,29 +257,69 @@
 .quote-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 900px;
+}
+
+.product-image-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.product-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.product-thumbnail:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
+}
+
+.product-placeholder {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
 }
 
 .quote-table thead {
-  border-bottom: 2px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 2px solid rgba(246, 223, 180, 0.3);
+  background: rgba(246, 223, 180, 0.08);
 }
 
 .quote-table th {
   text-align: left;
-  padding: 12px 8px;
-  color: var(--muted);
-  font-weight: 700;
-  font-size: 0.8rem;
+  padding: 14px 10px;
+  color: rgba(246, 223, 180, 0.95);
+  font-weight: 800;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
 .quote-table td {
-  padding: 12px 8px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.85rem;
+  padding: 14px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
 }
 
 .quote-table tbody tr:hover {
@@ -156,8 +327,13 @@
 }
 
 .quote-table tbody tr.has-quantity {
-  background: rgba(246, 223, 180, 0.05);
-  border-left: 3px solid var(--accent);
+  background: rgba(246, 223, 180, 0.12);
+  border-left: 4px solid var(--accent);
+  box-shadow: inset 0 0 8px rgba(246, 223, 180, 0.1);
+}
+
+.quote-table tbody tr.has-quantity td {
+  font-weight: 600;
 }
 
 .quantity-controls {
@@ -202,13 +378,16 @@
 }
 
 .price-cell {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
+  font-size: 0.95rem;
 }
 
 .price-cell.business {
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1rem;
+  text-shadow: 0 1px 3px rgba(246, 223, 180, 0.3);
 }
 
 .set-grid {
@@ -357,11 +536,12 @@
 
 /* 최종 견적 섹션 */
 .quote-total {
-  background: var(--panel);
-  border-radius: 12px;
-  padding: 24px;
-  border: 2px solid var(--accent);
-  margin-top: 16px;
+  background: linear-gradient(135deg, rgba(22, 22, 29, 0.98), rgba(30, 30, 40, 0.98));
+  border-radius: 16px;
+  padding: 28px;
+  border: 3px solid var(--accent);
+  margin-top: 20px;
+  box-shadow: 0 8px 32px rgba(246, 223, 180, 0.2), inset 0 0 20px rgba(246, 223, 180, 0.05);
 }
 
 .total-section {
@@ -374,9 +554,9 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-size: 1rem;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.05rem;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .total-row:last-child {
@@ -385,13 +565,14 @@
 
 .total-row span {
   color: var(--text);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.05rem;
 }
 
 .total-row strong {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: var(--text);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .total-row.discount span,
@@ -415,21 +596,24 @@
 }
 
 .total-row.final {
-  margin-top: 8px;
-  padding-top: 16px;
-  border-top: 2px solid var(--accent);
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 3px solid var(--accent);
   border-bottom: none;
 }
 
 .total-row.final span {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .total-row.final strong {
-  font-size: 1.8rem;
+  font-size: 2rem;
   color: var(--accent);
-  font-weight: 800;
+  font-weight: 900;
+  text-shadow: 0 2px 8px rgba(246, 223, 180, 0.4);
 }
 
 .quote-footer {
@@ -494,11 +678,13 @@
   }
 }
 
+
 /* 인쇄 스타일 */
 @media print {
   .quote-actions,
   .set-card,
-  .accessory-controls button {
+  .accessory-controls button,
+  .quantity-controls {
     display: none;
   }
 
