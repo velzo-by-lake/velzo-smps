@@ -62,26 +62,33 @@ function App() {
           <div className="main-grid">
             <LightCatalog />
             <section className="canvas-zone">
-              <div className="canvas-head">
-                <div>
-                  <p className="panel-label">BELT CANVAS</p>
-                  <h2>벨트를 추가하고 모듈을 배치하세요</h2>
-                  {belts.length === 0 && (
-                    <p className="canvas-hint">
-                      💡 <strong>시작하기:</strong> SMPS를 추가하고 원하는 조명을 선택해 벨트에 배치하세요. 
-                      실시간으로 전력 소비량과 견적을 확인할 수 있습니다.
-                    </p>
-                  )}
-                  {belts.length > 0 && belts.every((belt) => belt.lights.length === 0) && (
-                    <p className="canvas-hint">
-                      ✨ <strong>다음 단계:</strong> 카탈로그에서 조명을 선택하여 벨트에 추가하세요. 
-                      여러 조명을 조합하여 나만의 조명 디자인을 만들어보세요!
-                    </p>
-                  )}
+              <div className="canvas-header-card">
+                <div className="canvas-header-content">
+                  <div className="canvas-title-section">
+                    <div className="canvas-title-icon">⚡</div>
+                    <div>
+                      <h2 className="canvas-title">벨트 조명 디자이너</h2>
+                      <p className="canvas-subtitle">조명을 배치하고 전력 사용량을 확인하세요</p>
+                    </div>
+                  </div>
+                  <button type="button" className="add-smps-button" onClick={addBelt}>
+                    <span className="btn-icon-large">⚡</span>
+                    <div className="btn-content">
+                      <span className="btn-text">SMPS 추가</span>
+                      <span className="btn-price">40,000원</span>
+                    </div>
+                  </button>
                 </div>
-                <button type="button" className="primary-btn" onClick={addBelt}>
-                  + SMPS 추가
-                </button>
+                <div className="capacity-guide">
+                  <div className="guide-item">
+                    <span className="guide-icon safe">✓</span>
+                    <span className="guide-text">권장: <strong>70W</strong></span>
+                  </div>
+                  <div className="guide-item">
+                    <span className="guide-icon warning">⚠</span>
+                    <span className="guide-text">최대: <strong>100W</strong></span>
+                  </div>
+                </div>
               </div>
               {belts.map((belt, index) => {
                 const status = getStatus(getBeltTotalWatt(belt))
@@ -89,52 +96,55 @@ function App() {
                 const percent = getUsagePercent(getBeltTotalWatt(belt), ABSOLUTE_LIMIT)
                 const expanded = expandedBelts[belt.id] ?? true
                 return (
-                  <div key={belt.id} className="belt-accordion-block">
-                    <div className="belt-accordion-header">
-                      <button
-                        type="button"
-                        className="belt-accordion"
-                        onClick={() => toggleBelt(belt.id)}
-                      >
-                        <div className="belt-header-main">
-                          <div>
-                            <span className="muted">SMPS {index + 1}</span>
-                            <strong>{percent.toFixed(0)}%</strong>
+                  <div key={belt.id} className="smps-card">
+                    <div className="smps-card-header" onClick={() => toggleBelt(belt.id)}>
+                      <div className="smps-header-left">
+                        <div className="smps-number">SMPS {index + 1}</div>
+                        <div className="smps-status-group">
+                          <div className={`smps-status-badge ${status.toLowerCase()}`}>
+                            {status === 'OVERLOAD' ? '⚠️ 과부하' : status === 'CAUTION' ? '⚡ 주의' : '✓ 안전'}
                           </div>
-                          <div className="belt-header-info">
-                            <div className={`badge ${status.toLowerCase()}`}>{status}</div>
-                            <div className="muted">모듈 {lightCount}개</div>
-                            <div className="smps-price">40,000원</div>
+                          <div className="smps-usage">
+                            <span className="usage-value">{percent.toFixed(0)}%</span>
+                            <span className="usage-label">사용중</span>
                           </div>
                         </div>
-                        <span className="chevron">{expanded ? '−' : '+'}</span>
-                      </button>
-                      {belts.length > 1 && (
-                        <button
-                          type="button"
-                          className="belt-delete-btn"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            if (window.confirm('이 SMPS를 삭제하시겠습니까?')) {
-                              removeBelt(belt.id)
-                            }
-                          }}
-                          title="SMPS 삭제"
-                        >
-                          ×
-                        </button>
-                      )}
+                      </div>
+                      <div className="smps-header-right">
+                        <div className="smps-info">
+                          <span className="smps-modules">{lightCount}개 조명</span>
+                          <span className="smps-price-tag">40,000원</span>
+                        </div>
+                        {belts.length > 1 && (
+                          <button
+                            type="button"
+                            className="smps-delete-btn"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              if (window.confirm('이 SMPS를 삭제하시겠습니까?')) {
+                                removeBelt(belt.id)
+                              }
+                            }}
+                            title="SMPS 삭제"
+                          >
+                            삭제
+                          </button>
+                        )}
+                        <div className="smps-toggle">{expanded ? '▼' : '▶'}</div>
+                      </div>
                     </div>
                     {expanded && (
-                      <div className="belt-row">
-                        <BeltCanvas
-                          belt={belt}
-                          status={status}
-                          onStageReady={(stage) => {
-                            stageRefs.current[belt.id] = stage
-                          }}
-                        />
-                        <div className="belt-controls">
+                      <div className="smps-card-body">
+                        <div className="belt-visual-section">
+                          <BeltCanvas
+                            belt={belt}
+                            status={status}
+                            onStageReady={(stage) => {
+                              stageRefs.current[belt.id] = stage
+                            }}
+                          />
+                        </div>
+                        <div className="belt-info-section">
                           <LightList belt={belt} />
                           <PowerSummary belt={belt} stage={stageRefs.current[belt.id] ?? null} />
                         </div>
@@ -156,4 +166,5 @@ function App() {
 }
 
 export default App
+
 

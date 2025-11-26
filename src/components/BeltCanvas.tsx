@@ -18,8 +18,9 @@ type BeltCanvasProps = {
 }
 
 const DEFAULT_WIDTH = 600
-const DEFAULT_HEIGHT = 150
-const MAX_WIDTH = 800 // 최대 너비 제한
+const DEFAULT_HEIGHT = 180 // 높이 증가로 조명이 더 잘 보이도록
+const MIN_WIDTH = 400 // 최소 너비
+const MAX_WIDTH = 1200 // 최대 너비 증가
 const padding = 24
 
 const clampX = (value: number, width: number, trackWidth: number) => {
@@ -54,16 +55,16 @@ function LightSprite({
   const blurTween = useRef<gsap.core.Tween>()
 
   const ratio = naturalWidth > 0 ? naturalHeight / naturalWidth : 1
-  // 조명 크기를 더 크게 표시 (최소 50px, 스케일 1.5배)
-  const widthPx = Math.max((light.width / beltCentimeter) * usableWidth * 1.5, 50)
+  // 조명 크기를 더 크게 표시 (최소 60px, 스케일 1.8배) - 시인성 개선
+  const widthPx = Math.max((light.width / beltCentimeter) * usableWidth * 1.8, 60)
   const height = widthPx * ratio
-  const baseY = trackHeight / 2 - height - 6
+  const baseY = trackHeight / 2 - height - 12 // 조명이 더 위로 올라가도록
 
   useEffect(() => {
     if (element && imageRef.current) {
       imageRef.current.cache()
       imageRef.current.filters([Konva.Filters.Blur])
-      imageRef.current.blurRadius(6)
+      imageRef.current.blurRadius(4) // 블러 감소로 더 선명하게
       imageRef.current.getLayer()?.batchDraw()
     }
   }, [element])
@@ -82,7 +83,7 @@ function LightSprite({
 
   const animateBlur = (target: number) => {
     blurTween.current?.kill()
-    const current = imageRef.current?.blurRadius?.() ?? 6
+    const current = imageRef.current?.blurRadius?.() ?? 4
     const helper = { radius: current }
     blurTween.current = gsap.to(helper, {
       radius: target,
@@ -98,25 +99,23 @@ function LightSprite({
   const handleHover = () => {
     if (!imageRef.current) return
     imageRef.current.getStage()?.container().style.setProperty('cursor', 'pointer')
+    animateBlur(1) // 호버 시 더 선명하게
     gsap.to(imageRef.current, {
-      duration: 0.25,
-      scaleX: 1.08,
-      scaleY: 1.08,
-      y: baseY - 8,
+      scale: 1.15,
+      duration: 0.2,
+      ease: 'power2.out',
     })
-    animateBlur(12)
   }
 
   const handleOut = () => {
     if (!imageRef.current) return
     imageRef.current.getStage()?.container().style.setProperty('cursor', 'default')
+    animateBlur(4)
     gsap.to(imageRef.current, {
-      duration: 0.25,
-      scaleX: 1,
-      scaleY: 1,
-      y: baseY,
+      scale: 1,
+      duration: 0.2,
+      ease: 'power2.out',
     })
-    animateBlur(6)
   }
 
   return (
@@ -143,8 +142,9 @@ function LightSprite({
       }}
       onDblClick={() => removeLight(beltId, light.id)}
       opacity={element ? 1 : 0}
-      shadowBlur={25}
-      shadowColor="rgba(243,217,164,0.35)"
+      shadowBlur={30}
+      shadowColor="rgba(246,223,180,0.5)"
+      shadowOffset={{ x: 0, y: 4 }}
       perfectDrawEnabled={false}
     />
   )
@@ -167,27 +167,72 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
     onStageReady(stageRef.current)
   }, [onStageReady])
 
+  // 조명들의 실제 배치 길이를 계산하여 캔버스 너비 결정
+  const calculateRequiredWidth = () => {
+    if (belt.lights.length === 0) {
+      return DEFAULT_WIDTH
+    }
+    
+    const beltCentimeter = Math.max(100, belt.length * 100)
+    const baseUsableWidth = DEFAULT_WIDTH - padding * 2
+    
+    // 모든 조명의 실제 픽셀 너비 계산 (크기 증가 반영)
+    let totalWidth = 0
+    let maxLightWidth = 0
+    
+    belt.lights.forEach((light) => {
+      const lightWidthPx = Math.max((light.width / beltCentimeter) * baseUsableWidth * 1.8, 60)
+      totalWidth += lightWidthPx
+      maxLightWidth = Math.max(maxLightWidth, lightWidthPx)
+    })
+    
+    // 조명 간 최소 간격 추가 (각 조명당 30px - 더 넓게)
+    const spacing = belt.lights.length > 0 ? (belt.lights.length - 1) * 30 : 0
+    const requiredWidth = totalWidth + spacing + padding * 2
+    
+    // 최소 너비와 최대 너비 사이에서 조정
+    return Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, Math.max(requiredWidth, DEFAULT_WIDTH)))
+  }
+
   useEffect(() => {
     if (!containerRef.current) return undefined
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0]
       const containerWidth = entry.contentRect.width
-      // 컨테이너 너비에 맞춤 (최대 너비 제한)
-      const width = Math.min(containerWidth, MAX_WIDTH)
-      // 높이를 조명이 잘 보이도록 조정
-      const height = Math.max(140, Math.min(160, width * 0.2))
+      
+      // 조명이 있을 때는 필요한 너비 계산, 없을 때는 컨테이너 너비 사용
+      const calculatedWidth = calculateRequiredWidth()
+      const width = Math.min(Math.max(calculatedWidth, containerWidth), MAX_WIDTH)
+      
+      // 높이를 조명이 잘 보이도록 증가
+      const height = Math.max(180, Math.min(200, width * 0.22))
+      
       setCanvasSize({ width, height })
     })
     observer.observe(containerRef.current)
+    
+    // 조명이 변경될 때마다 크기 재계산
+    const recalculate = () => {
+      if (!containerRef.current) return
+      const calculatedWidth = calculateRequiredWidth()
+      const containerWidth = containerRef.current.getBoundingClientRect().width
+      const width = Math.min(Math.max(calculatedWidth, containerWidth), MAX_WIDTH)
+      const height = Math.max(180, Math.min(200, width * 0.22))
+      setCanvasSize({ width, height })
+    }
+    
+    recalculate()
     return () => observer.disconnect()
-  }, [])
+  }, [belt.lights.length, belt.length])
+  
   const trackWidth = canvasSize.width
   const trackHeight = canvasSize.height
   const usableWidth = Math.max(100, trackWidth - padding * 2)
   const beltCentimeter = Math.max(100, belt.length * 100)
-  // 조명 크기를 더 크게 표시 (최소 50px, 스케일 1.5배)
+  
+  // 조명 크기를 더 크게 표시 (최소 60px, 스케일 1.8배) - 시인성 개선
   const projectWidth = (physicalWidth: number) =>
-    Math.max((physicalWidth / beltCentimeter) * usableWidth * 1.5, 50)
+    Math.max((physicalWidth / beltCentimeter) * usableWidth * 1.8, 60)
 
   useEffect(() => {
     if (!explosionRef.current) return undefined
@@ -302,35 +347,43 @@ function BeltCanvas({ belt, status, onStageReady }: BeltCanvasProps) {
               fill="#2c2f36"
               cornerRadius={4}
             />
+            {/* 벨트 메인 바디 - 더 밝고 명확하게 */}
             <Rect
               x={padding}
-              y={trackHeight / 2 - 25}
+              y={trackHeight / 2 - 28}
               width={trackWidth - padding * 2}
-              height={45}
-              cornerRadius={22}
+              height={56}
+              cornerRadius={28}
               fillLinearGradientStartPoint={{ x: 0, y: 0 }}
               fillLinearGradientEndPoint={{ x: trackWidth, y: 0 }}
-              fillLinearGradientColorStops={[0, '#1b1b1f', 1, '#24262d']}
-              shadowBlur={20}
-              shadowColor="rgba(0,0,0,0.4)"
+              fillLinearGradientColorStops={[0, '#2a2d35', 0.5, '#32353d', 1, '#2a2d35']}
+              shadowBlur={24}
+              shadowColor="rgba(0,0,0,0.5)"
+              stroke={status === 'OVERLOAD' ? '#ff6267' : status === 'CAUTION' ? '#f3b563' : 'rgba(246,223,180,0.2)'}
+              strokeWidth={2}
             />
+            {/* 벨트 상단 글로우 라인 - 더 밝게 */}
             <Rect
-              x={padding + 3}
-              y={trackHeight / 2 - 30}
-              width={trackWidth - (padding + 3) * 2}
-              height={8}
-              fill="rgba(246,223,180,0.12)"
-              cornerRadius={4}
+              x={padding + 4}
+              y={trackHeight / 2 - 32}
+              width={trackWidth - (padding + 4) * 2}
+              height={6}
+              fill="rgba(246,223,180,0.25)"
+              cornerRadius={3}
+              shadowBlur={8}
+              shadowColor="rgba(246,223,180,0.4)"
             />
+            {/* 벨트 하단 그림자 */}
             <Rect
               x={padding}
-              y={trackHeight / 2 + 12}
+              y={trackHeight / 2 + 16}
               width={trackWidth - padding * 2}
-              height={12}
-              fill="rgba(0,0,0,0.3)"
-              shadowBlur={15}
-              shadowColor="rgba(0,0,0,0.3)"
-              opacity={0.5}
+              height={14}
+              fill="rgba(0,0,0,0.4)"
+              shadowBlur={20}
+              shadowColor="rgba(0,0,0,0.4)"
+              opacity={0.6}
+              cornerRadius={7}
             />
             {belt.lights.map((light) => (
               <LightSprite
