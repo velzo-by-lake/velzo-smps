@@ -155,6 +155,52 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+.quote-table tbody tr.has-quantity {
+  background: rgba(246, 223, 180, 0.05);
+  border-left: 3px solid var(--accent);
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-btn:not(:disabled):active {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+}
+
+.qty-value {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
 .price-cell {
   font-weight: 600;
   color: var(--text);

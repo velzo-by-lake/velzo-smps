@@ -26,46 +26,47 @@ function QuotePage() {
   const belts = useSimulatorStore((state) => state.belts)
   const [selectedSet, setSelectedSet] = useState<string | null>(null)
   const [accessoryQuantities, setAccessoryQuantities] = useState<Record<string, number>>({})
+  const [productQuantities, setProductQuantities] = useState<Record<string, number>>({})
+  const [smpsCount, setSmpsCount] = useState(belts.length)
 
   const SMPS_PRICE = 40000
-
-  const productMap = useMemo(
-    () => products.reduce<Record<string, typeof products[0]>>((acc, p) => ((acc[p.id] = p), acc), {}),
-    [],
-  )
 
   const accessoryMap = useMemo(
     () => accessories.reduce<Record<string, typeof accessories[0]>>((acc, a) => ((acc[a.id] = a), acc), {}),
     [],
   )
 
-  // SMPS 개수 계산
-  const smpsCount = belts.length
-
-  // 벨트에 배치된 제품 집계
-  const beltItems = useMemo(() => {
-    return belts.flatMap((belt) =>
-      belt.lights
-        .map((light) => {
-          const product = productMap[light.productId] || products.find((p) => p.id === light.productId)
-          return product ? { product, quantity: 1 } : null
-        })
-        .filter(Boolean) as Array<{ product: typeof products[0]; quantity: number }>,
-    )
-  }, [belts, productMap])
-
-  const aggregatedProducts = useMemo(() => {
-    const map = new Map<string, { product: typeof products[0]; quantity: number }>()
-    beltItems.forEach((item) => {
-      const existing = map.get(item.product.id)
-      if (existing) {
-        existing.quantity += item.quantity
-      } else {
-        map.set(item.product.id, { product: item.product, quantity: item.quantity })
-      }
+  // 벨트에 배치된 제품으로 초기 수량 설정
+  useMemo(() => {
+    const initialQuantities: Record<string, number> = {}
+    belts.forEach((belt) => {
+      belt.lights.forEach((light) => {
+        const productId = light.productId
+        if (productId) {
+          initialQuantities[productId] = (initialQuantities[productId] || 0) + 1
+        }
+      })
     })
-    return Array.from(map.values())
-  }, [beltItems])
+    setProductQuantities((prev) => {
+      // 기존 값과 병합 (사용자가 수동으로 변경한 값 유지)
+      const merged = { ...initialQuantities }
+      Object.keys(prev).forEach((id) => {
+        if (prev[id] > 0) {
+          merged[id] = prev[id]
+        }
+      })
+      return merged
+    })
+    setSmpsCount(belts.length)
+  }, [belts])
+
+  // 모든 제품 목록 (수량이 0이어도 표시)
+  const allProducts = useMemo(() => {
+    return products.map((product) => ({
+      product,
+      quantity: productQuantities[product.id] || 0,
+    }))
+  }, [productQuantities])
 
   const selectedSetData = useMemo(() => {
     if (!selectedSet) return null
@@ -76,9 +77,11 @@ function QuotePage() {
   const priceCalculation = useMemo(() => {
     let onlineTotal = 0
 
-    // 벨트에 배치된 제품
-    aggregatedProducts.forEach((item) => {
-      onlineTotal += item.product.price * item.quantity
+    // 모든 제품 (수량이 있는 것만)
+    allProducts.forEach((item) => {
+      if (item.quantity > 0) {
+        onlineTotal += item.product.price * item.quantity
+      }
     })
 
     // SMPS
@@ -112,13 +115,24 @@ function QuotePage() {
       vat,
       finalPrice,
     }
-  }, [aggregatedProducts, smpsCount, selectedSetData, accessoryQuantities, accessoryMap])
+  }, [allProducts, smpsCount, selectedSetData, accessoryQuantities, accessoryMap])
 
   const handleAccessoryChange = (id: string, delta: number) => {
     setAccessoryQuantities((prev) => ({
       ...prev,
       [id]: Math.max(0, (prev[id] || 0) + delta),
     }))
+  }
+
+  const handleProductChange = (id: string, delta: number) => {
+    setProductQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max(0, (prev[id] || 0) + delta),
+    }))
+  }
+
+  const handleSmpsChange = (delta: number) => {
+    setSmpsCount((prev) => Math.max(0, prev + delta))
   }
 
   const handleExportPDF = () => {
@@ -171,21 +185,23 @@ function QuotePage() {
     doc.line(20, yPos, pageWidth - 20, yPos)
     yPos += 5
 
-    // 제품 목록
+    // 제품 목록 (수량이 있는 것만)
     doc.setFont('helvetica', 'normal')
-    aggregatedProducts.forEach((item) => {
-      if (yPos > pageHeight - 40) {
-        doc.addPage()
-        yPos = 20
+    allProducts.forEach((item) => {
+      if (item.quantity > 0) {
+        if (yPos > pageHeight - 40) {
+          doc.addPage()
+          yPos = 20
+        }
+        const onlinePrice = item.product.price
+        const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
+        doc.text(item.product.name, 20, yPos)
+        doc.text(`${item.quantity}개`, 100, yPos)
+        doc.text(`${onlinePrice.toLocaleString()}원`, 120, yPos)
+        doc.text(`${businessPrice.toLocaleString()}원`, 150, yPos)
+        doc.text(item.product.size, 175, yPos)
+        yPos += 7
       }
-      const onlinePrice = item.product.price
-      const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
-      doc.text(item.product.name, 20, yPos)
-      doc.text(`${item.quantity}개`, 100, yPos)
-      doc.text(`${onlinePrice.toLocaleString()}원`, 120, yPos)
-      doc.text(`${businessPrice.toLocaleString()}원`, 150, yPos)
-      doc.text(item.product.size, 175, yPos)
-      yPos += 7
     })
 
     // SMPS
@@ -341,77 +357,117 @@ function QuotePage() {
         {/* 제품 목록 */}
         <section className="quote-section">
           <h2>제품 목록</h2>
-          {aggregatedProducts.length === 0 && smpsCount === 0 ? (
-            <p className="empty-state">벨트에 배치된 제품이 없습니다.</p>
-          ) : (
-            <div className="quote-table-wrapper">
-              <table className="quote-table">
-                <thead>
-                  <tr>
-                    <th>제품명</th>
-                    <th>수량</th>
-                    <th>온라인 가격</th>
-                    <th>사업자 프로모션 30%</th>
-                    <th>제품 사이즈</th>
-                    <th>와트</th>
-                    <th>제품 재질</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {aggregatedProducts.map((item) => {
-                    const onlinePrice = item.product.price
-                    const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
-                    const material = item.product.id.includes('stick') || item.product.id.includes('shade') || 
-                                    item.product.id.includes('ball') || item.product.id.includes('half') ||
-                                    item.product.id.includes('ufo') || item.product.id.includes('spot')
-                                      ? '알루미늄/플라스틱'
-                                      : '플라스틱'
-                    return (
-                      <tr key={item.product.id}>
-                        <td>{item.product.name}</td>
-                        <td>{item.quantity}개</td>
-                        <td className="price-cell">₩{onlinePrice.toLocaleString()}</td>
-                        <td className="price-cell business">₩{businessPrice.toLocaleString()}</td>
-                        <td>{item.product.size}</td>
-                        <td>{item.product.watt}W</td>
-                        <td>{material}</td>
-                      </tr>
-                    )
-                  })}
-                  {smpsCount > 0 && (
-                    <tr>
-                      <td>Velzo SMPS</td>
-                      <td>{smpsCount}개</td>
-                      <td className="price-cell">₩{SMPS_PRICE.toLocaleString()}</td>
-                      <td className="price-cell business">₩{Math.floor(SMPS_PRICE * (1 - BUSINESS_DISCOUNT_RATE)).toLocaleString()}</td>
-                      <td>145×45×30mm</td>
-                      <td>48V 100W</td>
-                      <td>-</td>
+          <div className="quote-table-wrapper">
+            <table className="quote-table">
+              <thead>
+                <tr>
+                  <th>제품명</th>
+                  <th>수량</th>
+                  <th>온라인 가격</th>
+                  <th>사업자 프로모션 30%</th>
+                  <th>제품 사이즈</th>
+                  <th>와트</th>
+                  <th>제품 재질</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allProducts.map((item) => {
+                  const onlinePrice = item.product.price
+                  const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
+                  const material =
+                    item.product.id.includes('stick') ||
+                    item.product.id.includes('shade') ||
+                    item.product.id.includes('ball') ||
+                    item.product.id.includes('half') ||
+                    item.product.id.includes('ufo') ||
+                    item.product.id.includes('spot')
+                      ? '알루미늄/플라스틱'
+                      : '플라스틱'
+                  return (
+                    <tr key={item.product.id} className={item.quantity > 0 ? 'has-quantity' : ''}>
+                      <td>{item.product.name}</td>
+                      <td>
+                        <div className="quantity-controls">
+                          <button
+                            type="button"
+                            className="qty-btn"
+                            onClick={() => handleProductChange(item.product.id, -1)}
+                            disabled={item.quantity === 0}
+                          >
+                            –
+                          </button>
+                          <span className="qty-value">{item.quantity}</span>
+                          <button type="button" className="qty-btn" onClick={() => handleProductChange(item.product.id, 1)}>
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="price-cell">₩{onlinePrice.toLocaleString()}</td>
+                      <td className="price-cell business">₩{businessPrice.toLocaleString()}</td>
+                      <td>{item.product.size}</td>
+                      <td>{item.product.watt}W</td>
+                      <td>{material}</td>
                     </tr>
-                  )}
-                  {Object.entries(accessoryQuantities)
-                    .filter(([, qty]) => qty > 0)
-                    .map(([id, qty]) => {
-                      const accessory = accessoryMap[id]
-                      if (!accessory) return null
-                      const onlinePrice = accessory.price
-                      const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
-                      return (
-                        <tr key={id}>
-                          <td>{accessory.name}</td>
-                          <td>{qty}개</td>
-                          <td className="price-cell">₩{onlinePrice.toLocaleString()}</td>
-                          <td className="price-cell business">₩{businessPrice.toLocaleString()}</td>
-                          <td>{accessory.size}</td>
-                          <td>-</td>
-                          <td>플라스틱</td>
-                        </tr>
-                      )
-                    })}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  )
+                })}
+                <tr className={smpsCount > 0 ? 'has-quantity' : ''}>
+                  <td>Velzo SMPS</td>
+                  <td>
+                    <div className="quantity-controls">
+                      <button
+                        type="button"
+                        className="qty-btn"
+                        onClick={() => handleSmpsChange(-1)}
+                        disabled={smpsCount === 0}
+                      >
+                        –
+                      </button>
+                      <span className="qty-value">{smpsCount}</span>
+                      <button type="button" className="qty-btn" onClick={() => handleSmpsChange(1)}>
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td className="price-cell">₩{SMPS_PRICE.toLocaleString()}</td>
+                  <td className="price-cell business">₩{Math.floor(SMPS_PRICE * (1 - BUSINESS_DISCOUNT_RATE)).toLocaleString()}</td>
+                  <td>145×45×30mm</td>
+                  <td>48V 100W</td>
+                  <td>-</td>
+                </tr>
+                {accessories.map((accessory) => {
+                  const qty = accessoryQuantities[accessory.id] || 0
+                  const onlinePrice = accessory.price
+                  const businessPrice = Math.floor(onlinePrice * (1 - BUSINESS_DISCOUNT_RATE))
+                  return (
+                    <tr key={accessory.id} className={qty > 0 ? 'has-quantity' : ''}>
+                      <td>{accessory.name}</td>
+                      <td>
+                        <div className="quantity-controls">
+                          <button
+                            type="button"
+                            className="qty-btn"
+                            onClick={() => handleAccessoryChange(accessory.id, -1)}
+                            disabled={qty === 0}
+                          >
+                            –
+                          </button>
+                          <span className="qty-value">{qty}</span>
+                          <button type="button" className="qty-btn" onClick={() => handleAccessoryChange(accessory.id, 1)}>
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="price-cell">₩{onlinePrice.toLocaleString()}</td>
+                      <td className="price-cell business">₩{businessPrice.toLocaleString()}</td>
+                      <td>{accessory.size}</td>
+                      <td>-</td>
+                      <td>플라스틱</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         {/* 세트 구성 */}
@@ -446,35 +502,6 @@ function QuotePage() {
           </div>
         </section>
 
-        {/* 부수기제 */}
-        <section className="quote-section">
-          <h2>부수기제</h2>
-          <div className="accessory-grid">
-            {accessories.map((accessory) => {
-              const qty = accessoryQuantities[accessory.id] || 0
-              return (
-                <div key={accessory.id} className="accessory-card">
-                  <div className="accessory-info">
-                    <strong>{accessory.name}</strong>
-                    <p>
-                      {accessory.size} · {accessory.color}
-                    </p>
-                    <p className="accessory-price">{accessory.price.toLocaleString()}원</p>
-                  </div>
-                  <div className="accessory-controls">
-                    <button type="button" onClick={() => handleAccessoryChange(accessory.id, -1)} disabled={qty === 0}>
-                      –
-                    </button>
-                    <span>{qty}</span>
-                    <button type="button" onClick={() => handleAccessoryChange(accessory.id, 1)}>
-                      +
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </section>
 
         {/* 최종 견적 */}
         <section className="quote-total">
