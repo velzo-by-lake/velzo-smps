@@ -329,7 +329,7 @@ function QuotePage() {
                 <tr className={smpsCount > 0 ? 'has-quantity' : ''}>
                   <td>
                     <div className="product-image-cell">
-                      <div className="product-placeholder">SMPS</div>
+                      <img src="/images/smps.png" alt="Velzo SMPS" className="product-thumbnail" />
                     </div>
                   </td>
                   <td>Velzo SMPS</td>
